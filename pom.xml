@@ -1,0 +1,172 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>samos</groupId>
+  <artifactId>samos</artifactId>
+  <version>1.0.0-RELEASE</version>
+  <name>SAMOS</name>
+  
+  <!--  Custom repositories for some libraries -->
+  <repositories>
+  	<repository>
+  		<id>wso2-repo</id>
+  		<url>http://dist.wso2.org/maven2/</url>
+  	</repository>
+  	<repository>
+  		<id>eclipse-repo</id>
+  		<url>https://repo.eclipse.org/content/groups/releases/</url>
+  	</repository>
+  	<repository>
+  		<id>central-maven</id>
+  		<url>http://central.maven.org/maven2/</url>
+  	</repository>
+  </repositories>
+	
+	<!-- List of all the libraries used in the project -->
+  <dependencies>
+  	<!-- List of libraries retrieved locally -->
+  	<!-- !!! This is not advised to do this, however finding the equivalent for each library in a distant repository can be difficult -->
+  	<dependency>
+		<groupId>apted-master</groupId>
+		<artifactId>apted-master</artifactId>
+		<version>1.0</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/apted-master.jar</systemPath>
+	</dependency>
+	<dependency>
+		<groupId>commons-io</groupId>
+		<artifactId>commons-io</artifactId>
+		<version>2.5</version>
+		<!--  
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/commons-io-2.5.jar</systemPath>
+		-->
+	</dependency>
+	<dependency>
+		<groupId>edu.mit.jwi</groupId>
+		<artifactId>edu.mit.jwi</artifactId>
+		<version>2.4.0</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/edu.mit.jwi_2.4.0.jar</systemPath>
+	</dependency>
+	<dependency>
+		<groupId>intt</groupId>
+		<artifactId>intt</artifactId>
+		<version>2.5</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/intt.jar</systemPath>
+	</dependency>
+	<dependency>
+		<groupId>JRI</groupId>
+		<artifactId>JRI</artifactId>
+		<version>2.0.6</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/JRI.jar</systemPath>
+	</dependency>
+	
+	 
+	<dependency>
+		<groupId>json</groupId>
+		<artifactId>json</artifactId>
+		<version>20170516</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/json-20170516.jar</systemPath>
+	</dependency>
+	
+<!-- https://mvnrepository.com/artifact/edu.stanford.nlp/stanford-corenlp -->
+<dependency>
+    <groupId>edu.stanford.nlp</groupId>
+    <artifactId>stanford-corenlp</artifactId>
+    <version>3.7.0</version>
+</dependency>
+
+<dependency>
+    <groupId>edu.stanford.nlp</groupId>
+    <artifactId>stanford-corenlp</artifactId>
+    <version>3.7.0</version>
+    <classifier>models</classifier>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.ujmp/ujmp-complete -->
+<dependency>
+    <groupId>org.ujmp</groupId>
+    <artifactId>ujmp-complete</artifactId>
+    <version>0.3.0</version>
+</dependency>
+
+
+	<dependency>
+		<groupId>ws4j</groupId>
+		<artifactId>ws4j</artifactId>
+		<version>2.0.6</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/ws4j-1.0.1.jar</systemPath>
+	</dependency>
+	
+<!-- 	<dependency>
+  <groupId>org.slf4j</groupId>
+  <artifactId>slf4j-simple</artifactId>
+  <version>1.7.21</version>
+</dependency> -->
+
+<!-- <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.9</version>
+    </dependency> -->
+    
+<dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>2.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>2.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>2.1</version>
+    </dependency>
+	
+  </dependencies>
+  
+  
+  
+  <build>
+  	<!-- Location of the directory containing all the source code -->
+    <sourceDirectory>src</sourceDirectory>
+     <plugins>
+    <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+            <configuration>
+                <archive>
+                <manifest>
+                    <mainClass>
+                        nl.tue.set.samos.main.SAMOSRunner
+                    </mainClass>
+                </manifest>
+                </archive>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+        </execution>
+    </executions>
+	</plugin>
+	</plugins>
+  </build>
+  <!-- Force Maven to use Java 1.8 -->
+  <properties>
+  	<maven.compiler.source>1.8</maven.compiler.source>
+  	<maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+</project>
