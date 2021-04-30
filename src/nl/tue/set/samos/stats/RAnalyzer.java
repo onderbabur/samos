@@ -92,8 +92,10 @@ public class RAnalyzer {
 		rexp = re.eval("library(\"vegan\")");	
 		
 		
-		rexp = re.eval("source(\"/Users/obabur/git/SAMOSTest/samos/src/nl/tue/set/samos/stats/Clustering.R\")");
-		rexp = re.eval("source(\"/Users/obabur/git/SAMOSTest/samos/src/nl/tue/set/samos/stats/CloneDetection.R\")");
+		//logger.debug(System.getProperty("user.dir"));
+		String s = System.getProperty("user.dir").replaceAll("\\\\", "/");
+		rexp = re.eval("source(\"" + s + "/src/nl/tue/set/samos/stats/Clustering.R\")");
+		rexp = re.eval("source(\"" + s + "/src/nl/tue/set/samos/stats/CloneDetection.R\")");
 		
 		return true;
 	}
@@ -101,6 +103,7 @@ public class RAnalyzer {
 	public void cluster(String vsmFile, String nameFile, String outputFolder) {
 		String command = "cluster(\"" + new File(vsmFile).getAbsolutePath() + "\",\"" + new File(nameFile).getAbsolutePath() + "\",\"" + 
 	new File(outputFolder).getAbsolutePath() + "\")";
+		command = command.replaceAll("\\\\", "/");
 		logger.info(command);
 		REXP rexp = re.eval(command);
 		logger.info("Finished clustering, final R output: "+rexp);
@@ -114,6 +117,7 @@ public class RAnalyzer {
 				+ new File(nameFile).getAbsolutePath() + "\",\""  
 				+ new File(sizeFile).getAbsolutePath() + "\",\"" 
 				+ new File(outputFolder).getAbsolutePath() + "\")";
+		command = command.replaceAll("\\\\", "/");
 		logger.info(command);
 		REXP rexp = re.eval(command);
 		logger.info("Finished clone detection, final R output: "+rexp);
