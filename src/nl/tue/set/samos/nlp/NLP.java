@@ -530,8 +530,9 @@ public class NLP {
 			} catch(Exception ex) {
 				wordnet = 0.0;
 			}
-			if (wordnet >= wordNetTreshold)  
+			if (wordnet >= wordNetTreshold) {  
 				if (wordnet == 1) wordnet = 0.95;
+			}
 			else 
 				wordnet = 0.0;
 			
