@@ -46,7 +46,9 @@ public class Crawler {
 	
 	static final Logger logger = LoggerFactory.getLogger(Crawler.class);
 	
-	public static final String ATL_ZOO_ECORE_URL_PATTERN = "https://gforge.inria.fr/scm/viewvc.php/atlantic-zoos/AtlantEcore/%s?view=co";
+	//public static final String ATL_ZOO_ECORE_URL_PATTERN = "https://gforge.inria.fr/scm/viewvc.php/atlantic-zoos/AtlantEcore/%s?view=co"; // server down
+	public static final String ATL_ZOO_ECORE_URL_PATTERN = "https://raw.githubusercontent.com/atlanmod/atlantic-zoo/main/AtlantEcore/%s"; // github project
+	
 	public static final String[] BIBLIO_CONF_MODEL_NAMES = {
 			"BibTeX.ecore",
 			"BibTeX1.1.ecore",
