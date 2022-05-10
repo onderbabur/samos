@@ -1,3 +1,5 @@
+Public online documentation, including installation guide and a short demonstration, for SAMOS can be found in the [SAMOS GitHub.io page](https://onderbabur.github.io/samos/).
+
 Features to be integrated in future versions:
 
 - major performance optimizations, including iterative clone detection
