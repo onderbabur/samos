@@ -33,6 +33,12 @@ import org.rosuda.JRI.Rengine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class uses the vsm output and performs various computations in R: domain clustering and clone detection. 
+ * 
+ * See the R script files for more details on each component.   
+ * 
+*/ 
 public class RAnalyzer {
 	
 	final Logger logger = LoggerFactory.getLogger(RAnalyzer.class);
@@ -47,6 +53,7 @@ public class RAnalyzer {
 		this.re.end();
 	}
 	
+	// start the R engine
 	public boolean prepareR(){
 		String args_[] = {"--no-save"};
 		if (!Rengine.versionCheck()) {
@@ -100,6 +107,7 @@ public class RAnalyzer {
 		return true;
 	}
 	
+	// run the clustering script
 	public void cluster(String vsmFile, String nameFile, String outputFolder) {
 		String command = "cluster(\"" + new File(vsmFile).getAbsolutePath() + "\",\"" + new File(nameFile).getAbsolutePath() + "\",\"" + 
 	new File(outputFolder).getAbsolutePath() + "\")";
@@ -110,6 +118,7 @@ public class RAnalyzer {
 		logger.info("Check results folder for the cluster labels");
 	}
 	
+	// run the clone detection script
 	public void detectClones(String vsmFile, String vsmMaskFile, String nameFile, String sizeFile, String outputFolder) {
 		String command = "detectClones(\"" + 
 				new File(vsmFile).getAbsolutePath() + "\",\"" 

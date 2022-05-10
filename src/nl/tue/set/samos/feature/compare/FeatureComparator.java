@@ -65,11 +65,18 @@ import nl.tue.set.samos.feature.TypedName;
 import nl.tue.set.samos.feature.TypedValuedName;
 import nl.tue.set.samos.nlp.NLP;
 import node.Node;
-
+/**
+ * This class contains several techniques for comparing features. It uses the NLP caching and similarity scores for model element names, while providing
+ * structural and attribute comparison methods for features.   
+ * 
+ * - structural comparison for n-grams (maximum similar subsequence) and n-trees (APTED ordered tree edit distance and Hungarian distance)
+ * - compound comparison schemes for unigrams: type comparison, name comparison, attribute comparison
+*/
 public class FeatureComparator {
 	
 	final Logger logger = LoggerFactory.getLogger(FeatureComparator.class);
 	
+	// which comparison technique to use for n-trees?
 	// TODO do this configurable
 	public final int TREE_COMPARE = 
 //			0; // ordered tree edit distance
@@ -132,6 +139,7 @@ public class FeatureComparator {
 		sims = new double[n][n];
 	}
 	
+	// load NLP cache for semantic similarity scores 
 	@SuppressWarnings("unchecked")
 	public void loadUpCache(String sourceFileFolder) throws IOException{
 //		dictionary = new LinkedHashSet<String>();
@@ -185,10 +193,11 @@ public class FeatureComparator {
 	
 	public final double REDUCED_TM_MULTIPLIER = 0.5;
 	
+	// main method to compare any two features, delegated to more specialized methods per feature type
 	@SuppressWarnings("unused")
 	public double compare(Feature f1, Feature f2){
 		
-		if (!f1.getClass().equals(f2.getClass()))
+		if (!f1.getClass().equals(f2.getClass())) // cannot compare different feature types 
 			return 0.0;
 		if (f1 instanceof NGram && f2 instanceof NGram)
 			return compareNGram((NGram)f1, (NGram)f2);
@@ -251,6 +260,7 @@ public class FeatureComparator {
 	protected double attributeMultipliers[][];
 	protected static double emptyMatrix[][];
 	
+	// main method to compare n-grams. it applies a comparison scheme and treats different pieces of information separately: types, names and attributes
 	public double compareNGram(NGram rowNgram, NGram columnNgram){
 		if (rowNgram.n != columnNgram.n) {
 			// TODO turn this on again, or implement a better check
@@ -480,6 +490,7 @@ public class FeatureComparator {
 		return finalResult;
 	}
 	
+	// compare two n-trees using the ordered tree edit distance algorithm
 	public double compareNTreeApted(NTreeApted rowNTreeApted, NTreeApted columnNTreeApted) {
 		float distance;
 		try { 
@@ -503,6 +514,7 @@ public class FeatureComparator {
 		}
 	}
 	
+	// compare two n-trees using the Hungarian algorithm
 	public double compareNTreeHungarian(NTreeApted rowNTreeApted, NTreeApted columnNTreeApted) {
 		float distance;
 		try { 
@@ -582,24 +594,24 @@ public class FeatureComparator {
 	}
 	
 	
-	 public<E> List<List<E>> generatePerm(List<E> original) {
-	     if (original.size() == 0) { 
-	       List<List<E>> result = new ArrayList<List<E>>();
-	       result.add(new ArrayList<E>());
-	       return result;
-	     }
-	     E firstElement = original.remove(0);
-	     List<List<E>> returnValue = new ArrayList<List<E>>();
-	     List<List<E>> permutations = generatePerm(original);
-	     for (List<E> smallerPermutated : permutations) {
-	       for (int index=0; index <= smallerPermutated.size(); index++) {
-	         List<E> temp = new ArrayList<E>(smallerPermutated);
-	         temp.add(index, firstElement);
-	         returnValue.add(temp);
-	       }
-	     }
-	     return returnValue;
-	   }
+//	 public<E> List<List<E>> generatePerm(List<E> original) {
+//	     if (original.size() == 0) { 
+//	       List<List<E>> result = new ArrayList<List<E>>();
+//	       result.add(new ArrayList<E>());
+//	       return result;
+//	     }
+//	     E firstElement = original.remove(0);
+//	     List<List<E>> returnValue = new ArrayList<List<E>>();
+//	     List<List<E>> permutations = generatePerm(original);
+//	     for (List<E> smallerPermutated : permutations) {
+//	       for (int index=0; index <= smallerPermutated.size(); index++) {
+//	         List<E> temp = new ArrayList<E>(smallerPermutated);
+//	         temp.add(index, firstElement);
+//	         returnValue.add(temp);
+//	       }
+//	     }
+//	     return returnValue;
+//	   }
 
 	private Object getAttributeOrDefaultValue(AttributedNode node, String attributeName){
 		if (node.hasAttribute(attributeName))
@@ -607,6 +619,7 @@ public class FeatureComparator {
 		else return Util.getDefaultAttributeValue(attributeName);
 	}
 	
+	// compare all the attributes of given model elements, and return the percentage similarity among them
 	public double compareAttributes(AttributedNode node1, AttributedNode node2){
 		assert(node1.size() == node2.size());
 		int nonmatch = 0;
@@ -627,13 +640,13 @@ public class FeatureComparator {
 		return value; 
 	}
 	
-	public double compareNTrees(NTree nt1, NTree nt2){
-		ArrayList<Double> globalSims = new ArrayList<Double>();
-		
-		double max = 0.0;
-		for (Double d : globalSims){
-			max = Math.max(max, d);
-		}
-		return max;
-	}
+//	public double compareNTrees(NTree nt1, NTree nt2){
+//		ArrayList<Double> globalSims = new ArrayList<Double>();
+//		
+//		double max = 0.0;
+//		for (Double d : globalSims){
+//			max = Math.max(max, d);
+//		}
+//		return max;
+//	}
 }

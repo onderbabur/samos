@@ -24,6 +24,11 @@
 # @version 1.0
 #
 
+
+# method for detecting clone using vsm output files, exporting the results in the outputFolder. 
+#
+# This standard implementation uses the masked bray-curtis distance and dbscan clustering. 
+# Detects clone types with different thresholds (0 for Type A, 0.10 for Type B, 0.30 for Type C). 
 detectClones <- function(vsmFile, vsmMaskFile, nameFile, sizeFile, outputFolder) {
 
 # load vsm files
@@ -32,6 +37,7 @@ vsmMask <- read.big.matrix(vsmMaskFile, header=FALSE, type='double')
 names <- read.csv(nameFile, header=FALSE)  
 sizes <- read.csv(sizeFile, header=FALSE) 
 
+# compute the pairwise distances
 distMatrix <- maskedBrayCurtis(vsmMatrix, vsmMask, sizes[,1]);
 
 # cut
@@ -39,6 +45,7 @@ distMatrix <- maskedBrayCurtis(vsmMatrix, vsmMask, sizes[,1]);
 #ct1.2 <- cutree(hc1, h=0.10)
 #ct1.3 <- cutree(hc1, h=0.30)
 
+# detect clones with different thresholds
 clones1 <- getClones(as.dist(distMatrix), 0.00, names, sizes)
 clones2 <- getClones(as.dist(distMatrix), 0.10, names, sizes)
 clones3 <- getClones(as.dist(distMatrix), 0.30, names, sizes)
@@ -47,11 +54,13 @@ clones3 <- getClones(as.dist(distMatrix), 0.30, names, sizes)
 #clones2_subset <- subset(clones2, !(clones2$x %in% clones1$x))
 #clones3_subset <- subset(clones3, !(clones3$x %in% clones2$x) & !(clones3$x %in% clones1$x))
 
+# export clone classes to csv files
 write.csv(clones1, paste0(outputFolder, "/cloneClustersTypeA.csv"), row.names = FALSE)
 write.csv(clones2, paste0(outputFolder, "/cloneClustersTypeB.csv"), row.names = FALSE)
 write.csv(clones3, paste0(outputFolder, "/cloneClustersTypeC.csv"), row.names = FALSE)
 }
 
+# masked bray-curtis distance, only considers the part of the vsm which are non-zero in either vectors
 maskedBrayCurtis <- function(data, dataFix, sizeVector){
   # special case when dimension is 1, matrix is erroneously loaded as transposed
   if (dim(data)[2] == 1 & dim(dataFix)[2] == 1) {

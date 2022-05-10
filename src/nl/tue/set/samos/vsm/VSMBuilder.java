@@ -63,6 +63,13 @@ import nl.tue.set.samos.feature.parser.JSONParser;
 import nl.tue.set.samos.feature.parser.PlainTextParser;
 import node.Node;
 
+/**
+ * This class builds a vector space model given a folder with feature files. It constructs a sparse matrix of pairwise similarities of models or model fragments, using
+ * 
+ * - type-based weighting scheme			whether to consider model element types with equal or different weights 
+ * - inverse-document frequency weighting	penalize very common model elements with a lower weight
+ * - quadratic vs linear mode				all-pairs approximate comparison (quadratic) or binary occurrence comparison (linear)) 
+*/ 
 public class VSMBuilder {
 	
 	final Logger logger = LoggerFactory.getLogger(VSMBuilder.class);
@@ -80,7 +87,7 @@ public class VSMBuilder {
 		this.vsmFolder = configuration.vsmFolder;
 	}
 	
-
+	// main method to compute the vsm from a folder of feature files and precomputed nlp
 	public void buildVSM(Parameters params, String tag) throws IOException { 
 		long startTime = System.currentTimeMillis();
 		
@@ -107,6 +114,7 @@ public class VSMBuilder {
 		double[] idfArray = null;
 		Matrix targetTfSparseMatrix = null;
 		
+		// process each feature file
 		for(File uf : ngramFiles)
 		{
 			logger.info("vsm processing model feature file " + uf.getName());
@@ -119,6 +127,7 @@ public class VSMBuilder {
 				ArrayList<Feature> features = new ArrayList<Feature>();
 				String s = null;
 				
+				// process all the features per feature file
 				while((s = br.readLine()) != null) {
 					Feature f = null;
 					if (params._STRUCTURE == STRUCTURE.NTREE)
@@ -130,7 +139,7 @@ public class VSMBuilder {
 						logger.error("ERROR: parsed null feature: " + f);
 					} else {
 						features.add(f);
-						if (!maximalFeatureSet.contains(f))
+						if (!maximalFeatureSet.contains(f)) // construct a maximal feature set (i.e. all features in all files)
 							maximalFeatureSet.add(f);					
 					}
 				}
@@ -149,7 +158,7 @@ public class VSMBuilder {
 		
 		logger.info("Total unique feature count:" + maximalFeatureSet.size());
 		
-		// regular application of all-pairs comparison
+		// regular application of all-pairs comparison: compare all with all, sum up the similarity score
 		if (params._VSM_MODE == VSM_MODE.QUADRATIC) 
 		{		
 			rawTfSparseMatrix = SparseMatrix.Factory.zeros(allFeatures.size(), maximalFeatureSet.size());
@@ -185,7 +194,7 @@ public class VSMBuilder {
 			}
 		}
 		
-		else // if LINEAR VSM
+		else // if LINEAR VSM: just binary comparison (feature is present or not)
 		{		
 			rawTfSparseMatrix = SparseMatrix.Factory.zeros(allFeatures.size(), maximalFeatureSet.size());
 
@@ -224,7 +233,7 @@ public class VSMBuilder {
 	
 		if (params._WEIGHT == WEIGHT.RAW)
 			targetTfSparseMatrix = rawTfSparseMatrix;
-		else { // some weighting scheme			
+		else { // some type-based weighting scheme			
 			int j = -1;
 			for (Feature f : maximalFeatureSet)
 			{
@@ -347,9 +356,10 @@ public class VSMBuilder {
 
 		// (log((total documents)/(number of docs with the term))
 		
+
 		if (params._IDF == IDF.NO_IDF)
 			;
-		else 
+		else // idf weighting scheme 
 		{
 			idfArray = new double[totalVocabularyCount];
 			Arrays.fill(idfArray, 0.0);
@@ -391,7 +401,8 @@ public class VSMBuilder {
 
 		logger.info("ELAPSED TIME: " + (System.currentTimeMillis() - startTime));
 	}
-		
+	
+	// export matrix to a csv file
 	public void DumpSparseMatrixToCsv(LinkedHashSet<Feature> maximalFeatureSet, Matrix sparseMatrix, String filename) throws IOException
 	{
 		FileWriter fout = new FileWriter(vsmFolder + filename);
@@ -410,6 +421,7 @@ public class VSMBuilder {
 		fout.close();
 	}
 
+	// different weighting schemes (experimental)
 	public void setWeights(WEIGHT _WEIGHT){
 		weightsMap = new HashMap<String, Double>();
 				

@@ -25,28 +25,6 @@
  */
 
 package nl.tue.set.samos.nlp;
-/*
- * Copyright (c) 2015-2016 Eindhoven University of Technology
- * 
- * This file is part of Model Clustering Framework.
- *
- * Model Clustering Framework is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Model Clustering Framework is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with Project Foo.  If not, see <http://www.gnu.org/licenses/>.
- * @author Onder Babur
- * @version 0.1
- */
-
-
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -90,11 +68,21 @@ import nl.tue.set.samos.feature.parser.PlainTextParser;
 import uk.ac.open.crc.intt.IdentifierNameTokeniser;
 import uk.ac.open.crc.intt.IdentifierNameTokeniserFactory;
 
-
 // https://sourceforge.net/p/jwordnet/code/HEAD/tree/trunk/jwnl/src/net/didion/jwnl/utilities/Examples.java
 // https://code.google.com/archive/p/jawjaw/downloads
 // http://www.nltk.org/howto/wordnet.html
 
+/**
+ * This is the main conglomerate class for NLP functionalities. It includes many top level methods for computing and storing nlp results for better performance. It also contains the following technhiques:
+ * 
+ *	- WordNet semantic similarity checking with Lin similarity
+ *  - maximum similar subsequence algorithm, a variation of longest common subsequence
+ *  - levenshtein distance
+ *  - lemmatizer (Stanford NLP)
+ *  - tokenizer (intt)
+ *  - stemmer (Porter)
+ *  - stop word removal and other filtering techniques
+*/
 public class NLP {
 	
 	final Logger logger = LoggerFactory.getLogger(NLP.class);
@@ -116,7 +104,7 @@ public class NLP {
 	public HashMap<String, String[]> tokenLookup = new HashMap<String, String[]>();
 	public HashMap<String, Double> synLookup = new HashMap<String, Double>();
 	
-	public HashMap<String, String> senseLookup = new HashMap<String, String>();
+//	public HashMap<String, String> senseLookup = new HashMap<String, String>(); // word-sense disambiguation not integrated in this version yet
 	
 	public Lin lin;
 	public Path path;
@@ -137,6 +125,7 @@ public class NLP {
         lemmatizer = Lemmatizer.getInstance();
 	}
 	
+	// bulk load wordnet-related files
 	public void loadWordNet(){      
       String wnhome 	= "wordnet/dict";
       String icfile		= "wordnet/semcor/ic-semcor.dat";
@@ -195,6 +184,7 @@ public class NLP {
 	}
 	
 	
+	// maximum similar subsequence algorithm, a variation of longest common subsequence which can work with non-exact similarity scores [0,1]. 
 	// TODO Optimize to cut off early using a difference limit (inspired by NiCaD-Simone)
 	public double lcs(double[][] scoreMatrix){ //String x, String y
 //        int M = x.length();
@@ -237,6 +227,7 @@ public class NLP {
         return max;
 	}
 	
+	// fixed maximum similar subsequence algorithm, where items are matched with fixed positions
 	// TODO lcsAll also optimize
 	// TODO even put temp double[] for more optimization
 	public double[] fcsAll(double[][] scoreMatrix){ //String x, String y
@@ -318,6 +309,7 @@ public class NLP {
       return max;
 	}
 
+	// main method for comparing two model element names, each of which are typically compound names with multiple tokens 
 	public double compareMultiword(String word1, String word2, double wordNetTreshold){ //String x, String y
 		//this.NLPOpt.filter(this.NLPOpt.tokeniseIntt(basePair.y))
 		String[] expandedTokens1, expandedTokens2;
@@ -341,6 +333,7 @@ public class NLP {
       return sum  / (1.0 * Math.max(expandedTokens1.length, expandedTokens2.length));
 	}
 	
+	// compare two model element names with token lookup for increased performance
 	public double compareMultiwordWithTokenLookup(Integer word1, Integer word2, double wordNetTreshold, HashMap<Integer, String[]> tokenLookup, HashMap<String, String> lemmaLookup){ //String x, String y
 		//this.NLPOpt.filter(this.NLPOpt.tokeniseIntt(basePair.y))
 		String[] expandedTokens1, expandedTokens2;
@@ -394,6 +387,7 @@ public class NLP {
 		return Math.min(Math.min(a, b), c);                                      
 	}                                                                            
 	
+	// standard levenshtein distance computation
 	private double compareNormalizedLevenshteinDistance(CharSequence lhs, CharSequence rhs) {
 		int[][] distance = new int[lhs.length() + 1][rhs.length() + 1];        
 
@@ -413,6 +407,7 @@ public class NLP {
 		return (1.0 * distance[lhs.length()][rhs.length()]) / Math.max(lhs.length(), rhs.length());
 	}
 
+	// tokenise word using the intt library
 	public String[] tokeniseIntt(String identifier) {
 		if (identifier == null) identifier = "";
 		String[] tokens = tokeniser.tokenise(identifier);
@@ -424,8 +419,10 @@ public class NLP {
 	
 	public String toLowerCase(String term) {return term.toLowerCase();}
 	
+	// check stop word, using the basic list in this class
 	private boolean isStopWord(String word) {return englishStopWords.contains(word);}
 
+	// filter out words to be discarded: too short ones, digits only
 	private boolean isDiscardWord(String word) {
 		// remove words that are only digits - only considering integers
 		boolean isAllDigits = true;
@@ -465,6 +462,7 @@ public class NLP {
 		return result;
 	}
 	
+	// standard Porter stemmer
 	public String stem(String word){
 		Stemmer stemmer = new Stemmer(); // how does this affect performance?
 		stemmer.add(word.toCharArray(), word.length());
@@ -472,10 +470,13 @@ public class NLP {
 		return stemmer.toString();
 	}
 	
+	// check if word is in wordnet
 	public boolean isWordInWordnet(String word, POS pos){
 		if (word == null || pos == null) return false;
 		return dict.getIndexWord(word, pos) != null;
 	}
+	
+	// This is the main method for comparing two words using various NLP techniques.
 	public double isSynonymExact(String word1, String word2, double wordNetTreshold){
 		if (word1 == null || word2 == null) 
 			return 0.0;
@@ -609,6 +610,7 @@ public class NLP {
 		return Math.max(wordnet, lev);
 	}
 	
+	// process all metamodel files in a given folder, tokenize all the model element names, and save them in serialized format for faster access later on. 
 	public void precomputeTokenLookupTable(String sourceFolder, SERIALIZATION _SERIALIZATION) throws IOException{
 		HashMap<Integer, String[]> tokenLookup = new HashMap<Integer, String[]>();
 		File tokenFile = new File(sourceFolder + "/tokens.ser");
@@ -662,6 +664,7 @@ public class NLP {
 		s.close();	
 	}
 	
+	// process a feature to extract the tokens in all model element names found in the feature
 	private void processFeatureForTokens(Feature f, HashMap<Integer, String[]> tokenLookup, HashMap<String, String> lemmaLookup, LinkedHashSet<String> dictionary) {
 		if (f instanceof NGram) {
 			NGram ng = (NGram) f;
@@ -702,6 +705,7 @@ public class NLP {
 	
 	HashMap<String, Double> tempLookup = new HashMap<String, Double>();
 	
+	// process all metamodel files in a given folder, compare all tokens with each other, compute their semantic similarity score and store them for faster access later on. 
 	@SuppressWarnings("unchecked")
 	public void precomputeSynonymLookupTable(String sourceFolder, double synonymThreshold) throws IOException{
 		File file = new File(sourceFolder + "/tokens.ser"); 

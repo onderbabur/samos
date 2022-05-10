@@ -66,10 +66,23 @@ import nl.tue.set.samos.stats.RAnalyzer;
 import nl.tue.set.samos.vsm.VSMBuilder;
 
 
+/**
+ * This is the main entry point and runner class for SAMOS. It gets the configuration options via CLI and runs SAMOS with those predefined settings:
+ *  
+ *	--crawl atlzoo
+ *	Crawls the atlzoo metamodel dataset, including metamodels of bibliography and conference management.
+ *
+ *	--cluster FOLDER_NAME
+ *  Runs clustering with standard settings for all the metamodels under the folder data/[FOLDER_NAME]. E.g. run with --cluster atlzoo for the crawled atlzoo dataset. 
+ *
+ *	--clone FOLDER_NAME
+ *	Runs clone detection with standard settings for all the metamodels under the folder data/[FOLDER_NAME]. E.g. run with --cluster atlzoo for the crawled atlzoo dataset. 
+ */
 public class SAMOSRunner {
 	
     private static Logger logger = LoggerFactory.getLogger(SAMOSRunner.class);
 
+    // CLI interaction with standard functionalities of SAMOS
 	public static void main(String[] args) {
 		
 		if (args.length == 2 && args[0].equals("--crawl") ) {
@@ -101,11 +114,14 @@ public class SAMOSRunner {
 				final UNIT _UNIT = UNIT.NAME; 
 				final STRUCTURE _STRUCTURE = STRUCTURE.UNIGRAM; 
 				
+				// preprocess model element names, tokenize them and lemmatize the tokens 
 				samos.PREPROCESS_TOKENIZE = true;
 				samos.PREPROCESS_LEMMATIZE = true;
 				
+				// set the threshold for including model elements in clustering (i.e. filter out the smaller ones)
 				samos.MIN_MODEL_ELEMENT_COUNT_PER_FRAGMENT = 1;
 				
+				// run the three components: feature extraction, vsm computation and clustering
 				logger.info("Starting SAMOS with goal " + samos.configuration._GOAL + " " + "and parameters " + _SCOPE + "-" + _UNIT  + "-" + _STRUCTURE);
 				samos.extractFeatures(_SCOPE, _UNIT, _STRUCTURE);
 				samos.buildVSMForClustering(_UNIT, _STRUCTURE);
@@ -117,11 +133,14 @@ public class SAMOSRunner {
 				final UNIT _UNIT = UNIT.ATTRIBUTED; 
 				final STRUCTURE _STRUCTURE = STRUCTURE.NTREE; 
 				
+				// preprocess model element names, just lemmatize them
 				samos.PREPROCESS_TOKENIZE = false;
 				samos.PREPROCESS_LEMMATIZE = true;
 				
+				// set the threshold for including model elements in clustering (i.e. filter out the smaller ones)
 				samos.MIN_MODEL_ELEMENT_COUNT_PER_FRAGMENT = 5;
 			
+				// run the three components: feature extraction, vsm computation and clone detection
 				logger.info("Starting SAMOS with goal " + samos.configuration._GOAL + " " + "and parameters " + _SCOPE + "-" + _UNIT  + "-" + _STRUCTURE);
 				samos.extractFeatures(_SCOPE, _UNIT, _STRUCTURE);
 				samos.buildVSMForCloneDetection(_UNIT, _STRUCTURE);
@@ -155,6 +174,7 @@ public class SAMOSRunner {
 	}
 	
 	// CONFIG
+	// set up configuration for folders and goal
 	private void loadConfiguration(String[] args){
 		
 //		File file = new File(Constants.configFile);
@@ -183,6 +203,7 @@ public class SAMOSRunner {
 	// CONFIG END
 	
 	// EXTRACTION
+	// extract features from the metamodels to feed the vsm computation
 	// NOTE: stack overflow with default stack size. increasing -Xss16m also doesn't help for some large (cyclic?) files
 	public static UNIT unitList[] = UNIT.values(); 
 	public static STRUCTURE structureList[] = STRUCTURE.values();
@@ -212,12 +233,12 @@ public class SAMOSRunner {
 		
 		logger.info("starting feature extraction");
 		long start = System.currentTimeMillis();
-		for (File f: fs) {
+		for (File f: fs) { // iterate all the metamodel files
 			logger.info("processing file:" + f.getName());
 			featureMap = extractor.process(f, _SCOPE, _UNIT, _STRUCTURE);
 			featureMap.keySet().forEach(key -> 
 			printNgrams(key, targetFolder.getAbsolutePath() + "/" + key 
-					+ Constants.featureFileSuffix, minSizeToOutput, _STRUCTURE)); 
+					+ Constants.featureFileSuffix, minSizeToOutput, _STRUCTURE)); // extract features into separate files
 
 
 		}				
@@ -264,8 +285,11 @@ public class SAMOSRunner {
 
 		
 	// VSM 
+	// vsm computation with standard clustering settings for convenience, for the CLI style running.  
+	// Note that the configuration options can be modified if desired. 
 	public void buildVSMForClustering(UNIT _UNIT, STRUCTURE _STRUCTURE) throws IOException{
 
+		// standard configuration for clustering
 		VSM_MODE _VSM_MODE = VSM_MODE.QUADRATIC;
 		WEIGHT _WEIGHT = WEIGHT.WEIGHT_1;
 		IDF _IDF = IDF.NORM_LOG;
@@ -283,17 +307,20 @@ public class SAMOSRunner {
 		
 		Parameters params = new Parameters(null, _UNIT, _STRUCTURE, _WEIGHT, _IDF, _TYPE_MATCH, _SYNONYM, _SYNONYM_TRESHOLD, _NGRAM_CMP, _CTX_MATCH, _FREQ, _VSM_MODE);
 		
+		// precompute nlp and store results for better performance
 		logger.info("precomputing NLP comparison values");
 		precomputeNLP(_STRUCTURE, _SYNONYM_TRESHOLD);
 		
+		// compute the VSM
 		logger.info("starting vsm computation");
 		buildVSMCommon(params, "cluster");	
 		
-		// compute also the file names
+		// also print the metamodel names to be used as labels later on 
 		FileUtil.printFilenameList(configuration.featureFolder, configuration.vsmFolder,  ".features", 0);
 		
 	}
 	
+	// precompute nlp, including tokenisation and semantic similarity checking (which are costly) 
 	public void precomputeNLP(STRUCTURE _STRUCTURE, SYNONYM_TRESHOLD _SYNONYM_TRESHOLD) {
 		long start = System.currentTimeMillis();
 		NLP nlp = new NLP();
@@ -312,9 +339,11 @@ public class SAMOSRunner {
 	
 
 
-	
+	// vsm computation with standard clone detection settings for convenience, for the CLI style running.  
+	// Note that the configuration options can be modified if desired. 
 	public void buildVSMForCloneDetection(UNIT _UNIT, STRUCTURE _STRUCTURE) throws IOException{		
 
+		// standard configuration for clustering
 		IDF _IDF = IDF.NO_IDF;
 		NGRAM_CMP _NGRAM_CMP = NGRAM_CMP.FIX; 
 		FREQ _FREQ = FREQ.FREQ_SUM;
@@ -324,7 +353,7 @@ public class SAMOSRunner {
 		if (!outputFolder.exists())
 			outputFolder.mkdirs();
 				
-		// normal run
+		// normal run - run the regular vsm computation with relaxed similarity scores, etc. 
 		{
 			VSM_MODE _VSM_MODE = VSM_MODE.QUADRATIC;
 			WEIGHT _WEIGHT = WEIGHT.WEIGHT_1;
@@ -334,11 +363,13 @@ public class SAMOSRunner {
 			CTX_MATCH _CTX_MATCH = _STRUCTURE.equals(STRUCTURE.UNIGRAM)?CTX_MATCH.CTX_STRICT:CTX_MATCH.CTX_LINEAR;
 			
 			Parameters params = new Parameters(null, _UNIT, _STRUCTURE, _WEIGHT, _IDF, _TYPE_MATCH, _SYNONYM, _SYNONYM_TRESHOLD, _NGRAM_CMP, _CTX_MATCH, _FREQ, _VSM_MODE);
+			// precompute and store nlp for better performance
 			precomputeNLP(_STRUCTURE, _SYNONYM_TRESHOLD);
+			// compute the VSM
 			buildVSMCommon(params, "cloneFull");	
 		}
 		
-		// mask run
+		// mask run - run the very strict (binary) vsm run for masking purposes in the distance computation
 		{
 			VSM_MODE _VSM_MODE = VSM_MODE.LINEAR;
 			WEIGHT _WEIGHT = WEIGHT.RAW;
@@ -348,6 +379,7 @@ public class SAMOSRunner {
 			CTX_MATCH _CTX_MATCH = CTX_MATCH.CTX_STRICT;
 					
 			Parameters params = new Parameters(null, _UNIT, _STRUCTURE, _WEIGHT, _IDF, _TYPE_MATCH, _SYNONYM, _SYNONYM_TRESHOLD, _NGRAM_CMP, _CTX_MATCH, _FREQ, _VSM_MODE);
+			// compute the VSM
 			buildVSMCommon(params, "cloneMask");	
 		}
 		
@@ -360,22 +392,23 @@ public class SAMOSRunner {
 	}
 	
 
+// not used at the moment
+//	public boolean isRedundantConfiguration(Parameters params){
+//		
+//		if (PREPROCESS_TOKENIZE && (params._STRUCTURE != STRUCTURE.UNIGRAM || params._UNIT != UNIT.NAME))
+//		{
+//			logger.error("Configuration error: PREPROCESS_TOKENIZE can only be used with UNIGRAM NAME combination.");
+//			return true;
+//		}
+//		
+//		if (params._SYNONYM == SYNONYM.NO_SYNONYM && params._SYNONYM_TRESHOLD != SYNONYM_TRESHOLD.NO_WORDNET)
+//			return true;
+//		if (params._STRUCTURE == STRUCTURE.UNIGRAM && (params._CTX_MATCH == CTX_MATCH.CTX_LINEAR || params._CTX_MATCH == CTX_MATCH.CTX_QUAD)) // no context for unigrams
+//			return true;		
+//		return false;
+//	}
 	
-	public boolean isRedundantConfiguration(Parameters params){
-		
-		if (PREPROCESS_TOKENIZE && (params._STRUCTURE != STRUCTURE.UNIGRAM || params._UNIT != UNIT.NAME))
-		{
-			logger.error("Configuration error: PREPROCESS_TOKENIZE can only be used with UNIGRAM NAME combination.");
-			return true;
-		}
-		
-		if (params._SYNONYM == SYNONYM.NO_SYNONYM && params._SYNONYM_TRESHOLD != SYNONYM_TRESHOLD.NO_WORDNET)
-			return true;
-		if (params._STRUCTURE == STRUCTURE.UNIGRAM && (params._CTX_MATCH == CTX_MATCH.CTX_LINEAR || params._CTX_MATCH == CTX_MATCH.CTX_QUAD)) // no context for unigrams
-			return true;		
-		return false;
-	}
-	
+	// common method for building a vsm (the common underlying technique for both clustering and clone detection)
 	public void buildVSMCommon(Parameters params, String tag) throws IOException{		
 
 		String id = Util.generateIdFromParams(params);
@@ -384,6 +417,8 @@ public class SAMOSRunner {
 	}	
 	// VSM END
 	
+	// R 
+	// run distance computation and clustering in R, using the rJava interface and R scripts 
 	public void clusterInR() {
 		r.prepareR();
 		

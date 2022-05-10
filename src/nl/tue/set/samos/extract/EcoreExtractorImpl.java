@@ -72,12 +72,21 @@ import nl.tue.set.samos.common.Pair;
 import nl.tue.set.samos.common.Util;
 import nl.tue.set.samos.common.enums.STRUCTURE;
 import nl.tue.set.samos.common.enums.UNIT;
-
+/**
+ * This is the main basic feature extractor for Ecore metamodels. It iterates over a given metamodel and extracts features according to the given configuration.
+ * 
+ *  scope	[MODEL | EPACKAGE | ECLASS] the scope/granularity of feature extraction
+ * 
+ *  unit	[NAME | ATTRIBUTED] the unit of extraction per model element
+ *  
+ *  structure [UNIGRAM | BIGRAM | NTREE] the structure of the extracted features
+*/
 public class EcoreExtractorImpl extends IExtractor {
 
 	final Logger logger = LoggerFactory.getLogger(EcoreExtractorImpl.class);	
 	
 	@Override
+	// iterates over the containment tree of a metamodel and returns all model elements of a certain type
 	public List<Object> getAllContainedObjectsByType(File f, String scope) {	
 		try {			
 			Resource metamodel_resource;
@@ -127,6 +136,7 @@ public class EcoreExtractorImpl extends IExtractor {
 	}
 		
 	@Override
+	// extract the immediate features given an object (i.e. metamodel element) in the metamodel
 	public List<String> extractFeatures(Object object, UNIT _UNIT, STRUCTURE _STRUCTURE) {
 		
 		// filter
@@ -149,6 +159,7 @@ public class EcoreExtractorImpl extends IExtractor {
 	}
 
 	@Override
+	// get all the directly connected elements in the metamodel structure
 	public List<Object> getNextElements(Object object) {
 		
 		// filter
@@ -226,6 +237,7 @@ public class EcoreExtractorImpl extends IExtractor {
 		}
 	}
 
+	// get the supertypes of a given EClass instance 
 	public List<EClass> getSupertypes(EObject object) {
 		List<EClass> supertypes = new ArrayList<EClass>();
 		if (object instanceof EClass){
@@ -259,6 +271,7 @@ public class EcoreExtractorImpl extends IExtractor {
 		return supertypes;
 	}
 	
+	// get the directly connected elements along with their edges, given a model element
 	public Pair<List<Object>, List<String>> getNextElementsWithEdges(EObject object) {
 		Pair<List<Object>, List<String>> children = new Pair<List<Object>, List<String>>(new ArrayList<Object>(), new ArrayList<String>());
 		
@@ -298,7 +311,8 @@ public class EcoreExtractorImpl extends IExtractor {
 		
 		return children;
 	}
-		
+	
+	// generate structural features from a given model element. Can output plain text or JSON
 	public String generateFeatureFromChildren(EObject object, UNIT _UNIT, boolean isJSON) {
 		StringBuffer buffer = new StringBuffer();
 		Pair<List<Object>, List<String>> children = getNextElementsWithEdges(object);
@@ -352,7 +366,8 @@ public class EcoreExtractorImpl extends IExtractor {
 			simpleFeatures.set(i, Constants.NG + simpleFeatures.get(i));
 		return simpleFeatures;
 	}
-	
+
+	// generate a simple feature (i.e. unigram) given a model element. can output plain text or json.
 	public Object generateSimpleFeature(EObject object, UNIT _UNIT, boolean isJSON){		
 		JSONObject obj = null;
 		StringBuffer feature = null;
@@ -516,6 +531,7 @@ public class EcoreExtractorImpl extends IExtractor {
 		}
 	}
 	
+	// generates a full-fledged attributed feature (containing all details of the node) given a model element 
 	// TODO check if cleanse is being applied consistently
 	private Object extractAttributedFeatureFromSingleObject(EObject object, boolean isJSON) {		
 		JSONObject obj = null;
@@ -666,6 +682,7 @@ public class EcoreExtractorImpl extends IExtractor {
 	}
 
 	@Override
+	// find out the name of a model element
 	public String getName(Object o) {
 		if (o instanceof ENamedElement) 
 			return ((ENamedElement)o).getName();
