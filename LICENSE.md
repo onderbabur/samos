@@ -5,7 +5,7 @@ SAMOS is licensed under the MIT license.
 ```
 MIT license
 
-Copyright (c) 2015-2021 Onder Babur
+Copyright (c) 2015-2022 Onder Babur
 
 This file is part of SAMOS Model Analytics and Management Framework.
 
