@@ -70,6 +70,8 @@ author = "{\"O}nder Babur and Loek Cleophas and Mark {van den Brand}"
 }
 ````
 
+The preprint of the paper can be found under the folder "paper".
+
 Other major publications for SAMOS: 
 
 Önder Babur, Loek Cleophas, and Mark van den Brand. Hierarchical clustering of metamodels for comparative analysis and visualization. In European Conference on Modelling Foundations and Applications, pages 3–18. Springer, 2016.
