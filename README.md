@@ -4,7 +4,7 @@ Potentially mode up-to-date public online documentation, including installation 
 **SAMOS** (Statistical Analysis of Models) is a framework for model analytics and management. It is capable of processing large numbers of models for different scenarios, notably domain clustering and clone detection. The underlying principles are inspired from the domains information retrieval, data science and machine learning. The main components of a typical SAMOS workflow consist of (a) model fragmentation in terms n-grams, (b) feature comparison using algorithms and natural language processing, (c) vector space model computation, (d) distance measurement and clustering.   
 
 
-# Features in SAMOS 1.0
+# Features in SAMOS 1.0.0
 1. Support for processing Ecore metamodels, for clustering and clone detection scenarios
 2. Simple CLI for crawling test models, and running clustering and clone detection with standard settings
 3. Configuration (through changing the source code) of the following:
