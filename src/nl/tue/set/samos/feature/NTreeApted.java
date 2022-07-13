@@ -35,12 +35,13 @@ import nl.tue.set.samos.feature.compare.AptedNodeCustom;
 import node.Node;
 
 
-// HACK, first attempt that is just 1 parent + x children leaves, not generalizable to depth > 2
+/**
+ * Aggregate feature type containing a tree of other features, implemented using the APTED library. 
+ * 
+ * Note that first attempt is just 1 parent + x children leaves, not generalizable to depth > 2. 
+ */
 public class NTreeApted extends AggregateFeature{ 
 	
-		/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8269732096154199861L;
 	
 	final Logger logger = LoggerFactory.getLogger(NTreeApted.class);
@@ -55,7 +56,7 @@ public class NTreeApted extends AggregateFeature{
 			for (AptedNodeCustom<Feature> child : children){
 				aptedTree.addChild(child);
 			}
-			n = 2;//1 + childFeatures.size();
+			n = 2;//1 + childFeatures.size(); 
 		}
 		
 		public int size() {return size(aptedTree);}
@@ -85,29 +86,34 @@ public class NTreeApted extends AggregateFeature{
 		}
 		
 		
-		// HACK sorts implemented here, also no iteration/recursion into lower depths
+		// sorts implemented here, also no iteration/recursion into lower depths at the moment
 		public void sort(){
 			bubbleSort(this.aptedTree.getChildren());
 		}
 		
+		// compare two nodes with features (assuming n-grams as features)
 		private int compare(Node<Feature> lhs, Node<Feature> rhs) {
 			NGram ngLHS = (NGram) lhs.getNodeData();
 			NGram ngRHS = (NGram) rhs.getNodeData();
 			
+			// first compare the whole string representation of the first element
 			int cmp1 = ngLHS.get(0).toString().compareTo(ngRHS.get(0).toString()); 
 			if (cmp1 != 0) return cmp1;
 			
+			// then compare the types of the second element
 			int cmp2 = ((TypedFeature) ngLHS.get(1)).getType().compareTo(((TypedFeature) ngRHS.get(1)).getType());
 			if (cmp2 != 0) return cmp2;
 			
+			// then compare the names of the second element
 			int cmp3 = ((NamedFeature) ngLHS.get(1)).getName().compareTo(((NamedFeature) ngRHS.get(1)).getName());
 			if (cmp3 != 0) return cmp3;
 			
+			// last, compare the attributes
 			int cmp4 = new Integer(((AttributedNode) ngLHS.get(1)).hashCodeSubset()).compareTo(((AttributedNode) ngRHS.get(1)).hashCodeSubset());
 			return cmp4;
 		}
 		
-		public void bubbleSort(List<Node<Feature>> nodesToSort) {
+		private void bubbleSort(List<Node<Feature>> nodesToSort) {
 
 			Node<Feature> temp;
 	        for (int i = 0; i < nodesToSort.size() - 1; i++) {
@@ -126,7 +132,6 @@ public class NTreeApted extends AggregateFeature{
 		public boolean equals(Object o) {
 			if (o instanceof NTreeApted)
 			{
-				
 				NTreeApted target = (NTreeApted) o;
 				return this.toString().equals(target.toString());
 			}

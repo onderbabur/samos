@@ -43,6 +43,9 @@ import nl.tue.set.samos.feature.SimpleType;
 import nl.tue.set.samos.feature.TypedName;
 import nl.tue.set.samos.feature.TypedValuedName;
 
+/**
+ * Simple parser class for processing plain text feature files
+ */
 public class PlainTextParser {
 	
 	static final Logger logger = LoggerFactory.getLogger(PlainTextParser.class);

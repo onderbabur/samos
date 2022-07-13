@@ -69,8 +69,11 @@ import nl.tue.set.samos.vsm.VSMBuilder;
 /**
  * This is the main entry point and runner class for SAMOS. It gets the configuration options via CLI and runs SAMOS with those predefined settings:
  *  
- *	--crawl atlzoo
+ *	--crawl atlzoo urlPattern
  *	Crawls the atlzoo metamodel dataset, including metamodels of bibliography and conference management.
+ *
+ *	--crawl zenodo urlPattern
+ *	Crawls the zenodo model clustering dataset. 
  *
  *	--cluster FOLDER_NAME
  *  Runs clustering with standard settings for all the metamodels under the folder data/[FOLDER_NAME]. E.g. run with --cluster atlzoo for the crawled atlzoo dataset. 

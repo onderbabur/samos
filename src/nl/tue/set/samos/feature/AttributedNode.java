@@ -32,6 +32,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Feature type which can represent any number of attributes in a key-value mapping. 
+ */
 public class AttributedNode extends SimpleFeature implements TypedFeature, NamedFeature{
 	private static final long serialVersionUID = 6172206750271494217L;
 	final Logger logger = LoggerFactory.getLogger(AttributedNode.class);

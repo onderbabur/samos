@@ -111,7 +111,7 @@ public class FeatureComparator {
 	public boolean TRACE_SIMILARS = false;
 	public boolean TRACE_SIMILARS_NTREE = false;
 	
-	// HACK to avoid creating new arrays
+	// workaround for filling temporary matrices and reusing them, rather than creating them from scratch each time. 
 	private void fillTempDataStructures(){
 		// TODO is it ok to do this, as this is the max size of the matrix?
 		//int n = parameters._STRUCTURE.ordinal()+1; // N if no edges included
@@ -245,6 +245,7 @@ public class FeatureComparator {
 			return "";
 	}
 	
+	// temporary data structures
 	protected double typeMultipliers[][];
 	protected boolean typeExactMatches[][];
 	protected double typeValueMultipliers[][];
@@ -465,6 +466,7 @@ public class FeatureComparator {
 			}
 		}
 
+		// decide which n-gram comparison to use: fixed or max similar subsequence
 		double resultSim;
 		int resultN;
 		if (parameters._NGRAM_CMP == NGRAM_CMP.FIX) {
@@ -477,6 +479,7 @@ public class FeatureComparator {
 			resultN = this.nlp.lcsLength(sims);
 		}
 		
+		// decide on context multiplier
 		double finalResult = 0.0;
 		if(parameters._CTX_MATCH == CTX_MATCH.CTX_STRICT) // average sim if all match
 			finalResult = (resultN == rowNgram.n)?(resultSim/rowNgram.n):0.0;
@@ -535,6 +538,7 @@ public class FeatureComparator {
 		}
 	}
 	
+	// compute hungarian distance for n-trees
 	public float computeHungarianDistance(Node<Feature> tree1, Node<Feature> tree2) {
 		Vector<Node<Feature>> children1 = tree1.getChildren();
 		Vector<Node<Feature>> children2 = tree2.getChildren();
@@ -552,6 +556,7 @@ public class FeatureComparator {
 			features2 = featuresTemp;
 		}
 		
+		// build a comparison matrix for all the features in the leaves 
 		double[][] comparisonMatrix = new double[features1.size()][features2.size()];
 		for (int i=0; i<features1.size(); i++) {			
 			for (int j=0; j<features2.size(); j++) {
@@ -563,6 +568,7 @@ public class FeatureComparator {
 			}
 		}
 		
+		// do a composite distance using the parent distance and leaf distances combined
 		double parentDistance = 1.0d - compareNGram((NGram) tree1.getNodeData(), (NGram) tree2.getNodeData());
 		int minLeafCount = Math.min(features1.size(), features2.size()); 
 		int maxLeafCount = Math.max(features1.size(), features2.size());
@@ -576,7 +582,7 @@ public class FeatureComparator {
 			leavesDistance = Math.max(features1.size(), features2.size());
 			return (float) ((parentDistance + leavesDistance) / (1 + maxLeafCount));
 		}
-		else{
+		else{ // the normal distance computation
 			HungarianAlgorithm hungarian = new HungarianAlgorithm(comparisonMatrix);
 			int[] match = hungarian.execute();
 			double cost = hungarian.computeCost(comparisonMatrix, match);
@@ -593,6 +599,7 @@ public class FeatureComparator {
 		 
 	}
 
+	// aux method for getting a default value for an attribute, if not in the key-value map
 	private Object getAttributeOrDefaultValue(AttributedNode node, String attributeName){
 		if (node.hasAttribute(attributeName))
 			return node.getAttribute(attributeName);

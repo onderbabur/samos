@@ -33,7 +33,7 @@ import node.Node;
 import node.StringNodeData;
 
 /**
- * This is a unit-nost model defined on string labels.
+ * This is a unit-cost model defined on string labels.
  *
  * @see CostModel
  * @see StringNodeData

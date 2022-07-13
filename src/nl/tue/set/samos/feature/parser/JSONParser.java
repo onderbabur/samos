@@ -47,6 +47,9 @@ import nl.tue.set.samos.feature.TypedValuedName;
 import nl.tue.set.samos.feature.compare.AptedNodeCustom;
 import node.Node;
 
+/**
+ * Simple parser class for processing JSON feature files
+ */
 public class JSONParser {
 	
 	static final Logger logger = LoggerFactory.getLogger(JSONParser.class);

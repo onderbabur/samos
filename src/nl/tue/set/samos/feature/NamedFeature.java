@@ -26,6 +26,9 @@
 
 package nl.tue.set.samos.feature;
 
+/**
+ * Simple feature type containing a name. 
+ */
 public interface NamedFeature {
 	public String getName();
 }

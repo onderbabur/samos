@@ -28,11 +28,10 @@ package nl.tue.set.samos.feature;
 import java.util.ArrayList;
 
 
-// HACK, first attempt that is just 1 parent + x children leaves, not generalizable to depth > 2
+/**
+ * Aggregate feature type containing a tree of other features. Own implementation, and is obsolete at the moment. 
+ */
 public class NTree extends AggregateFeature{ 
-		/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2543062747898858123L;
 		private final SimpleFeature parentFeature;
 		private final ArrayList<Feature> childFeatures;

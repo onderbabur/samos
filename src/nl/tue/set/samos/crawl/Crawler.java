@@ -42,6 +42,11 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Model crawler class for SAMOS. At the moment this supports crawling from fixed Ecore datasets on ATL zoo and Zenodo. 
+ *  
+ */
+
 public class Crawler {
 	
 	static final Logger logger = LoggerFactory.getLogger(Crawler.class);
@@ -81,6 +86,7 @@ public class Crawler {
 		
 	}	
 	
+	// crawl target dataset (zenodo or atl zoo at the moment) and store it in the target folder under project root's data folder.  
 	public static void crawl(String targetFolder, String urlPattern) throws MalformedURLException, IOException {
 			if (targetFolder.equals("zenodo"))				
 				crawlZenodo(targetFolder, urlPattern);
@@ -89,6 +95,8 @@ public class Crawler {
 			else
 				logger.error("Did not recognize the dataset to be crawled: " + targetFolder);
 		}
+	
+	// crawls the url pattern. Right now very limited to the atl zoo pattern and model files under BIBLIO_CONF_MODEL_NAMES
 	public static void crawlATLZoo(String targetFolder, String urlPattern) throws MalformedURLException, IOException {
 	
 		if (!targetFolder.endsWith("/")) targetFolder += "/";
@@ -99,6 +107,7 @@ public class Crawler {
 		}
 	}
 	
+	// crawls the target zenodo zip file and unzips it 
 	public static void crawlZenodo(String targetFolder, String urlPattern) throws MalformedURLException, IOException{
 		if (!targetFolder.endsWith("/")) targetFolder += "/";
 		

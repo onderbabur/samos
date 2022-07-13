@@ -26,6 +26,9 @@
 
 package nl.tue.set.samos.feature;
 
+/**
+ * Simple feature type only containing a type. 
+ */
 public class SimpleType extends SimpleFeature implements TypedFeature {
 
 	/**

@@ -27,7 +27,9 @@
 package nl.tue.set.samos.feature;
 import java.util.ArrayList;
 
-
+/**
+ * Aggregate feature type which can contain a sequence of features. 
+ */
 public class NGram extends AggregateFeature{ 
 		/**
 	 * 

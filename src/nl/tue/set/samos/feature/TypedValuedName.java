@@ -28,6 +28,9 @@ package nl.tue.set.samos.feature;
 
 import nl.tue.set.samos.common.Pair;
 
+/**
+ * Simple feature type only containing a name, type and a value for the type. 
+ */
 public class TypedValuedName extends SimpleFeature implements TypedFeature, NamedFeature{
 	private static final long serialVersionUID = 6172206750271494217L;
 	private Pair<String, String> pair;

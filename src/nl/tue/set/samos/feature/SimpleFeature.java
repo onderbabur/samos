@@ -26,6 +26,9 @@
 
 package nl.tue.set.samos.feature;
 
+/**
+ * Simple feature type not containing other features (i.e. not an aggregate)  
+ */
 public abstract class SimpleFeature extends Feature {
 
 	/**

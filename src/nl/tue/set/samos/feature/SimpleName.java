@@ -26,6 +26,10 @@
 
 package nl.tue.set.samos.feature;
 
+/**
+ * Simple feature type only containing a name. 
+ */
+
 public class SimpleName extends SimpleFeature implements NamedFeature {
 
 	/**

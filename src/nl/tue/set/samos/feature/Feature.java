@@ -28,11 +28,11 @@ package nl.tue.set.samos.feature;
 
 import java.io.Serializable;
 
+/**
+ * Top abstract class representing any feature that can be extracted from a model.   
+ */
 public abstract class Feature implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5982962719094201702L;
 
 }

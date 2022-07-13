@@ -723,7 +723,7 @@ public class NLP {
 	}
 
 
-	
+	// optional lemmatize string if flags for pre-processing tokenization and lemmatization are on
 	public String lemmatizeIfFlagSet(String base, boolean preToken, boolean preLemma) {
 		String result = lemmatizeIfFlagSet_aux(base, preToken, preLemma);
 		if (result == null || result.equals("")) 
@@ -755,6 +755,8 @@ public class NLP {
 				return base;
 		}
 	}
+	
+	//////// utility classes below for handling strings
 	
 	public String cleanse(String text){
 		if (text == null) { text = "null"; return text; } 

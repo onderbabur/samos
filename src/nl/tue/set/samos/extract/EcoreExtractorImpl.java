@@ -120,6 +120,7 @@ public class EcoreExtractorImpl extends IExtractor {
 		return null;
 	}
 	
+	// recursively find all the EObjects in a model and accumulate them in a list. 
 	public void getAllEObjects(EObject object, List<EObject> objects){		
 		// filter
 		if (isFiltered(object))
@@ -131,6 +132,7 @@ public class EcoreExtractorImpl extends IExtractor {
 			getAllEObjects((EObject)o, objects);
 	}
 	
+	// at the moment filtering these three types for clustering and clone detection purposes. 
 	private boolean isFiltered(Object object) {
 		return (object instanceof EAnnotation || object instanceof EGenericType || object instanceof ETypeParameter);
 	}

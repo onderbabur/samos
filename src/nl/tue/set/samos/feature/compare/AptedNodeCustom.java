@@ -29,9 +29,10 @@ package nl.tue.set.samos.feature.compare;
 
 import node.Node;
 
+/**
+ * Custom extension of APTED tree nodes, with specialized string builder. 
+ */
 public class AptedNodeCustom<D> extends Node<D> {
-
-
 
   public AptedNodeCustom(D nodeData) {
 		super(nodeData);

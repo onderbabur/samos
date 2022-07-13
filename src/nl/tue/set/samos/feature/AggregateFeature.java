@@ -26,11 +26,11 @@
 
 package nl.tue.set.samos.feature;
 
+/**
+ * Top abstract class representing a feature consisting of other feature (e.g. composite pattern). 
+ */
 public abstract class AggregateFeature extends Feature{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3454353992923872974L;
 
 }

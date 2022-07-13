@@ -36,10 +36,15 @@ import nl.tue.set.samos.common.enums.STRUCTURE;
 import nl.tue.set.samos.common.enums.UNIT;
 import nl.tue.set.samos.nlp.NLP;
 
+/**
+ * Abstract class for extracting features from models. Given a file and configuration, it should generate mapped string representations for the features.  
+*/
 public abstract class IExtractor {
 	
+	// natural language processing component
 	public NLP nlp;
 	
+	// settings to control preprocessing via NLP.
 	public boolean PREPROCESS_TOKENIZE;
 	public boolean PREPROCESS_LEMMATIZE;
 //	public int MIN_FEATURE_COUNT_PER_FRAGMENT;
@@ -49,6 +54,7 @@ public abstract class IExtractor {
 		nlp.loadWordNet();
 	}	
 	
+	// main method for processing a file and extracting mapped features from it. 
 	public HashMap<String, ArrayList<String>> process(File f, SCOPE _SCOPE, UNIT _UNIT, STRUCTURE _STRUCTURE) {
 		
 		List<Object> allContents = getAllContainedObjectsByType(f, _SCOPE.toString());		
@@ -73,7 +79,8 @@ public abstract class IExtractor {
 		
 		return featureMap;
 	}
-		
+	
+	// recursive method for processing an in-memory model element and accumulating its features in a list. 
 	public void process(Object currentObject, ArrayList<String> featureList, UNIT _UNIT, STRUCTURE _STRUCTURE) {
 		List<String> currentFeatures = extractFeatures(currentObject, _UNIT, _STRUCTURE);
 		if (currentFeatures != null){
@@ -86,11 +93,11 @@ public abstract class IExtractor {
 	}
 	
 	
-	// to be implemented
+	// to be implemented in concrete subclass
 	public abstract List<String> extractFeatures(Object CURRENT, UNIT _UNIT, STRUCTURE _STRUCTURE);
-	// to be implemented
+	// to be implemented in concrete subclass
 	public abstract List<Object> getNextElements(Object CURRENT);
-	// to be implemented
+	// to be implemented in concrete subclass
 	public abstract List<Object> getAllContainedObjectsByType(File f, String type);
 	
 	public abstract String getName(Object o);
