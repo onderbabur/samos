@@ -85,9 +85,9 @@ public class SAMOSRunner {
     // CLI interaction with standard functionalities of SAMOS
 	public static void main(String[] args) {
 		
-		if (args.length == 2 && args[0].equals("--crawl") ) {
+		if (args.length == 3 && args[0].equals("--crawl") ) {
 			try {
-				Crawler.crawl(args[1]);
+				Crawler.crawl(args[1], args[2]);
 			} catch (Exception e) {
 				logger.error("error in crawling: " + e.getMessage());
 			}

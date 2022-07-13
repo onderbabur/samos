@@ -47,7 +47,10 @@ public class Crawler {
 	static final Logger logger = LoggerFactory.getLogger(Crawler.class);
 	
 	//public static final String ATL_ZOO_ECORE_URL_PATTERN = "https://gforge.inria.fr/scm/viewvc.php/atlantic-zoos/AtlantEcore/%s?view=co"; // server down
-	public static final String ATL_ZOO_ECORE_URL_PATTERN = "https://raw.githubusercontent.com/atlanmod/atlantic-zoo/main/AtlantEcore/%s"; // github project
+	
+	// moved this as launch configuration parameter
+	//public static final String ATL_ZOO_ECORE_URL_PATTERN = "https://raw.githubusercontent.com/atlanmod/atlantic-zoo/main/AtlantEcore/%s"; // github project
+	
 	
 	public static final String[] BIBLIO_CONF_MODEL_NAMES = {
 			"BibTeX.ecore",
@@ -70,35 +73,36 @@ public class Crawler {
 			"sigkdd.owl.ecore"};
 	public static final String BIBLIO_CONF_FOLDER = "data/atlzoo/biblioAndConf/";
 	
-	public static final String ZENODO_DATASET_PATH = "https://zenodo.org/record/2585456/files/manualDomains.zip?download=1";
+	// moved this as launch configuration parameter
+	//public static final String ZENODO_DATASET_PATH = "https://zenodo.org/record/2585456/files/manualDomains.zip?download=1";
 
 	public static void main(String[] args) throws MalformedURLException, IOException {
 //		crawl();
 		
 	}	
 	
-	public static void crawl(String targetFolder) throws MalformedURLException, IOException {
+	public static void crawl(String targetFolder, String urlPattern) throws MalformedURLException, IOException {
 			if (targetFolder.equals("zenodo"))				
-				crawlZenodo(targetFolder);
+				crawlZenodo(targetFolder, urlPattern);
 			else if (targetFolder.equals("atlzoo"))
-				crawlATLZoo(targetFolder);
+				crawlATLZoo(targetFolder, urlPattern);
 			else
 				logger.error("Did not recognize the dataset to be crawled: " + targetFolder);
 		}
-	public static void crawlATLZoo(String targetFolder) throws MalformedURLException, IOException {
+	public static void crawlATLZoo(String targetFolder, String urlPattern) throws MalformedURLException, IOException {
 	
 		if (!targetFolder.endsWith("/")) targetFolder += "/";
 		for (String modelName: BIBLIO_CONF_MODEL_NAMES) {
-			logger.info(String.format(ATL_ZOO_ECORE_URL_PATTERN, new Object[]{modelName}));
-			FileUtils.copyURLToFile(new URL(String.format(ATL_ZOO_ECORE_URL_PATTERN, new Object[]{modelName})), 
+			logger.info(String.format(urlPattern, new Object[]{modelName}));
+			FileUtils.copyURLToFile(new URL(String.format(urlPattern, new Object[]{modelName})), 
 				new File("data/" + targetFolder + modelName));
 		}
 	}
 	
-	public static void crawlZenodo(String targetFolder) throws MalformedURLException, IOException{
+	public static void crawlZenodo(String targetFolder, String urlPattern) throws MalformedURLException, IOException{
 		if (!targetFolder.endsWith("/")) targetFolder += "/";
 		
-		String path = ZENODO_DATASET_PATH;
+		String path = urlPattern;
 		File tempZip = new File("data/" + targetFolder, "temp.zip");
 		FileUtils.copyURLToFile(new URL(path), 
 				tempZip);

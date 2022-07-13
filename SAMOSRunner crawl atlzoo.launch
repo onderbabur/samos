@@ -27,7 +27,7 @@
     <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="nl.tue.set.samos.main.SAMOSRunner"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="samos"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--crawl atlzoo"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--crawl atlzoo https://raw.githubusercontent.com/atlanmod/atlantic-zoo/main/AtlantEcore/%s"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="samos"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djava.library.path=/Library/Frameworks/R.framework/Resources/library/rJava/jri/ -Xss16m"/>
