@@ -103,9 +103,7 @@ public class NLP {
 	
 	public HashMap<String, String[]> tokenLookup = new HashMap<String, String[]>();
 	public HashMap<String, Double> synLookup = new HashMap<String, Double>();
-	
-//	public HashMap<String, String> senseLookup = new HashMap<String, String>(); // word-sense disambiguation not integrated in this version yet
-	
+		
 	public Lin lin;
 	public Path path;
 	public IDictionary dict;
@@ -146,50 +144,16 @@ public class NLP {
       	e.printStackTrace();
       }
       ICFinder 			icfinder 			=	new ICFinder(icfile);
-//      NumberFormat		formatter		=	new DecimalFormat("0.0000");
       // ....................................................................................................................................................................
       lin = new Lin(dict, icfinder);
       // ....................................................................................................................................................................
-    //<roots>
-//    		ArrayList<ISynsetID>	roots = new ArrayList<ISynsetID>();
-//    		ISynset							synset						=	null;
-//    		Iterator<ISynset>			iterator						=	null;
-//    		List<ISynsetID>			hypernyms				=	null;
-//    		List<ISynsetID>			hypernym_instances	=	null;
-//    		iterator = dict.getSynsetIterator(POS.NOUN);
-//    		while(iterator.hasNext())
-//    		{
-//    			synset = iterator.next();
-//    			hypernyms				=	synset.getRelatedSynsets(Pointer.HYPERNYM);					// !!! if any of these point back (up) to synset then we have an inf. loop !!!
-//    			hypernym_instances	=	synset.getRelatedSynsets(Pointer.HYPERNYM_INSTANCE);
-//    			if(hypernyms.isEmpty() && hypernym_instances.isEmpty())
-//    			{
-//    				roots.add(synset.getID());
-//    			}
-//    		}
-//    		iterator = dict.getSynsetIterator(POS.VERB);
-//    		while(iterator.hasNext())
-//    		{
-//    			synset = iterator.next();
-//    			hypernyms				=	synset.getRelatedSynsets(Pointer.HYPERNYM);					// !!! if any of these point back (up) to synset then we have an inf. loop !!!
-//    			hypernym_instances	=	synset.getRelatedSynsets(Pointer.HYPERNYM_INSTANCE);
-//    			if(hypernyms.isEmpty() && hypernym_instances.isEmpty())
-//    			{
-//    				roots.add(synset.getID());
-//    			}
-//    		}
-//    		path = new Path(dict, roots);        
-      // ....................................................................................................................................................................
-           				
 	}
 	
 	
 	// maximum similar subsequence algorithm, a variation of longest common subsequence which can work with non-exact similarity scores [0,1]. 
 	// TODO Optimize to cut off early using a difference limit (inspired by NiCaD-Simone)
 	public double lcs(double[][] scoreMatrix){ //String x, String y
-//        int M = x.length();
 		int M = scoreMatrix.length;
-//        int N = y.length();
 		int N = scoreMatrix[0].length;
 
         // opt[i][j] = length of LCS of x[i..M] and y[j..N]
@@ -198,9 +162,7 @@ public class NLP {
         // compute length of LCS and all subproblems via dynamic programming
         for (int i = M-1; i >= 0; i--) {
             for (int j = N-1; j >= 0; j--) {
-                //if (x.charAt(i) == y.charAt(j))
             	if (scoreMatrix[i][j] > 0)
-//                    opt[i][j] = opt[i+1][j+1] + 1;
             		opt[i][j] = opt[i+1][j+1] + scoreMatrix[i][j];
                 else 
                     opt[i][j] = Math.max(opt[i+1][j], opt[i][j+1]);
@@ -210,7 +172,6 @@ public class NLP {
         // recover LCS itself and print it to standard output
         int i = 0, j = 0;
         while(i < M && j < N) {
-            //if (x.charAt(i) == y.charAt(j)) {
         	if (scoreMatrix[i][j] > 0) {
                 i++;
                 j++;
@@ -223,7 +184,6 @@ public class NLP {
         for (i=0; i<opt.length; i++)
         	for (j=0; j<opt[0].length; j++)
         		max = Math.max(max, opt[i][j]);
-//        System.out.println("max = " + max);
         return max;
 	}
 	
@@ -267,9 +227,7 @@ public class NLP {
 	}
 
 	public int lcsLength(double[][] scoreMatrix){ //String x, String y
-//      int M = x.length();
 		int M = scoreMatrix.length;
-//      int N = y.length();
 		int N = scoreMatrix[0].length;
 
       // opt[i][j] = length of LCS of x[i..M] and y[j..N]
@@ -278,9 +236,7 @@ public class NLP {
       // compute length of LCS and all subproblems via dynamic programming
       for (int i = M-1; i >= 0; i--) {
           for (int j = N-1; j >= 0; j--) {
-              //if (x.charAt(i) == y.charAt(j))
           	if (scoreMatrix[i][j] > 0)
-//                  opt[i][j] = opt[i+1][j+1] + 1;
           		opt[i][j] = opt[i+1][j+1] + 1;
               else 
                   opt[i][j] = Math.max(opt[i+1][j], opt[i][j+1]);
@@ -290,22 +246,18 @@ public class NLP {
       // recover LCS itself and print it to standard output
       int i = 0, j = 0;
       while(i < M && j < N) {
-          //if (x.charAt(i) == y.charAt(j)) {
       	if (scoreMatrix[i][j] > 0) {
-//              System.out.print(x.charAt(i));
               i++;
               j++;
           }
           else if (opt[i+1][j] >= opt[i][j+1]) i++;
           else                                 j++;
       }
-//      System.out.println();
       
       int max = 0;
       for (i=0; i<opt.length; i++)
       	for (j=0; j<opt[0].length; j++)
       		max = Math.max(max, opt[i][j]);
-//      System.out.println("max = " + max);
       return max;
 	}
 
@@ -335,7 +287,6 @@ public class NLP {
 	
 	// compare two model element names with token lookup for increased performance
 	public double compareMultiwordWithTokenLookup(Integer word1, Integer word2, double wordNetTreshold, HashMap<Integer, String[]> tokenLookup, HashMap<String, String> lemmaLookup){ //String x, String y
-		//this.NLPOpt.filter(this.NLPOpt.tokeniseIntt(basePair.y))
 		String[] expandedTokens1, expandedTokens2;
 		expandedTokens1 = tokenLookup.get(word1);
 		expandedTokens2 = tokenLookup.get(word2);
@@ -344,11 +295,6 @@ public class NLP {
 		for (int i=0; i<expandedTokens1.length; i++)
 			for (int j=0;j<expandedTokens2.length; j++) {
 				scoreMatrix[i][j] = isSynonymExact(expandedTokens1[i], expandedTokens2[j], wordNetTreshold, lemmaLookup);
-				//scoreMatrix[i][j] = isSynonymExact(expandedTokens1[i], expandedTokens2[j], 0);
-//				if(scoreMatrix[i][j] > 0) {
-//					sum += scoreMatrix[i][j];
-//					count++;
-//				}
 			}
 		
 		for (int i=0; i<expandedTokens1.length; i++){
@@ -375,13 +321,6 @@ public class NLP {
 		
 	private final IdentifierNameTokeniserFactory factory = new IdentifierNameTokeniserFactory();	
 	private final IdentifierNameTokeniser tokeniser;
-//    private final ILexicalDatabase db = new NictWordNet();
-//    private final RelatednessCalculator[] rcs = {
-//                    //new HirstStOnge(db), new LeacockChodorow(db), new Lesk(db),  
-//    				//new WuPalmer(db), 
-//                    //new Resnik(db), new JiangConrath(db), 
-//    				new edu.cmu.lti.ws4j.impl.Lin(db)//, new Path(db)
-//                    };
  		                                             
 	private int minimum(int a, int b, int c) {                            
 		return Math.min(Math.min(a, b), c);                                      
@@ -403,7 +342,6 @@ public class NLP {
 						distance[i][j - 1] + 1,                                  
 						distance[i - 1][j - 1] + ((lhs.charAt(i - 1) == rhs.charAt(j - 1)) ? 0 : 1));
 
-		//return distance[lhs.length()][rhs.length()];
 		return (1.0 * distance[lhs.length()][rhs.length()]) / Math.max(lhs.length(), rhs.length());
 	}
 
@@ -519,14 +457,11 @@ public class NLP {
 		double wordnet = 0.0;
 		if (wordNetTreshold > 0.0) {
 			
-			// begin wordnet
-			//if (word1.contains(".n.") && word2.contains(".n.")) { 
 						
 			int sense1 = 1, //Integer.parseInt(word1.substring(word1.lastIndexOf('.')+1)),
 					sense2 = 1;//Integer.parseInt(word2.substring(word2.lastIndexOf('.')+1));
 			try{
 				wordnet = lin.lin(lemma1, sense1, lemma2, sense2, "n");
-//					wordnet = path.path(lemma1, sense1, lemma2, sense2, "n");
 				
 			} catch(Exception ex) {
 				wordnet = 0.0;
@@ -547,7 +482,6 @@ public class NLP {
 	public double isSynonymExact(String word1, String word2, double wordNetTreshold, HashMap<String, String> lemmaLookup){
 		if (word1 == null || word2 == null) 
 			return 0.0;
-//		System.out.println("AAAA " + word1 + ":" + word2);
 		String lemma1, lemma2;
 		if (word1.contains(".n.")) {
 			lemma1 = word1.substring(0, word1.indexOf('.'));
@@ -588,13 +522,11 @@ public class NLP {
 		double wordnet = 0.0;
 		if (wordNetTreshold > 0.0) {
 			
-			// begin wordnet
-			//if (word1.contains(".n.") && word2.contains(".n.")) { 				
-			int sense1 = 1, //Integer.parseInt(word1.substring(word1.lastIndexOf('.')+1)),
-					sense2 = 1;//Integer.parseInt(word2.substring(word2.lastIndexOf('.')+1));
+			// begin wordnet				
+			int sense1 = 1, 
+					sense2 = 1;
 			try{
 				wordnet = lin.lin(lemmaLookup.get(lowerCaseWord1), sense1, lemmaLookup.get(lowerCaseWord2), sense2, "n");
-				//					wordnet = path.path(lemma1, sense1, lemma2, sense2, "n");
 
 			} catch(Exception ex) {
 				wordnet = 0.0;
@@ -778,7 +710,6 @@ public class NLP {
 					}
 				}
 			}
-//			if (!TRACE_SYNONYMS) logger.debug("\n");
 		}
 		
 		String suffix = synonymThreshold>0?"_WNET":"_NOWNET";

@@ -51,8 +51,7 @@ public class AttributedNode extends SimpleFeature implements TypedFeature, Named
 	public boolean hasAttribute(String key) { return keyValueMap.containsKey(key);}
 	public Set<String> getAttributes(){return keyValueMap.keySet();}
 	public String getAttribute(String key) {
-		if (hasAttribute(key)) 
-			//return (String) keyValueMap.get(key);			
+		if (hasAttribute(key)) 	
 			return keyValueMap.get(key).toString();
 		else
 			logger.error("ERROR: trying to get nonexistent key: " + key);

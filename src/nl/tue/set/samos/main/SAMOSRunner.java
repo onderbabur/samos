@@ -173,14 +173,7 @@ public class SAMOSRunner {
 	// set up configuration for folders and goal
 	private void loadConfiguration(String[] args){
 		
-//		File file = new File(Constants.configFile);
-//		Properties properties = new Properties();
-		
-		try{
-//			FileInputStream fileInput = new FileInputStream(file);
-//			properties.load(fileInput);
-//			fileInput.close();
-			
+		try{			
 			configuration = new Configuration();
 			configuration.modelFolder = args[1];
 			if (configuration.modelFolder.endsWith("/")) configuration.modelFolder = configuration.modelFolder.substring(0, configuration.modelFolder.length()-1);
@@ -387,22 +380,6 @@ public class SAMOSRunner {
 		
 	}
 	
-
-// not used at the moment
-//	public boolean isRedundantConfiguration(Parameters params){
-//		
-//		if (PREPROCESS_TOKENIZE && (params._STRUCTURE != STRUCTURE.UNIGRAM || params._UNIT != UNIT.NAME))
-//		{
-//			logger.error("Configuration error: PREPROCESS_TOKENIZE can only be used with UNIGRAM NAME combination.");
-//			return true;
-//		}
-//		
-//		if (params._SYNONYM == SYNONYM.NO_SYNONYM && params._SYNONYM_TRESHOLD != SYNONYM_TRESHOLD.NO_WORDNET)
-//			return true;
-//		if (params._STRUCTURE == STRUCTURE.UNIGRAM && (params._CTX_MATCH == CTX_MATCH.CTX_LINEAR || params._CTX_MATCH == CTX_MATCH.CTX_QUAD)) // no context for unigrams
-//			return true;		
-//		return false;
-//	}
 	
 	// common method for building a vsm (the common underlying technique for both clustering and clone detection)
 	public void buildVSMCommon(Parameters params, String tag) throws IOException{		

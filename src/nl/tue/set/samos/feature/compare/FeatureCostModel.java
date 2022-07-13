@@ -52,17 +52,7 @@ public class FeatureCostModel implements CostModel<Feature> {
    * @param n a node considered to be deleted.
    * @return {@code 1} - a fixed cost of deleting a node.
    */
-  public float del(Node<Feature> n) {
-//	  if (n.getChildren().size() == 1){
-//		  Node<Feature> child = n.getChildren().get(0);
-//		  if (child.getNodeData() instanceof NGram){
-//			  NGram ng = (NGram) child.getNodeData();
-//			  if (ng.n == 2 && ng.get(0) instanceof SimpleType && 
-//					  ((SimpleType)ng.get(0)).getType().equals("typeOf"))
-//				  return 2.0f;
-//		  }
-//	  }
-		  
+  public float del(Node<Feature> n) {  
     return 1.0f;
   }
 
@@ -73,16 +63,6 @@ public class FeatureCostModel implements CostModel<Feature> {
    * @return {@code 1} - a fixed cost of inserting a node.
    */
   public float ins(Node<Feature> n) {
-//	  if (n.getChildren().size() == 1){
-//		  Node<Feature> child = n.getChildren().get(0);
-//		  if (child.getNodeData() instanceof NGram){
-//			  NGram ng = (NGram) child.getNodeData();
-//			  if (ng.n == 2 && ng.get(0) instanceof SimpleType && 
-//					  ((SimpleType)ng.get(0)).getType().equals("typeOf"))
-//				  return 2.0f;
-//		  }
-//	  }
-	  
     return 1.0f;
   }
 
@@ -94,19 +74,7 @@ public class FeatureCostModel implements CostModel<Feature> {
    * @param n2 a destination node for rename.
    * @return {@code 1} if labels of renamed nodes are equal, and {@code 0} otherwise.
    */
-  public float ren(Node<Feature> n1, Node<Feature> n2) {
-//	if ((n1.getNodeData() instanceof TypedName) && (n2.getNodeData() instanceof TypedName)) {
-//		TypedName tn1 = (TypedName) n1.getNodeData();
-//		TypedName tn2 = (TypedName) n2.getNodeData();
-//		
-//		float typeMultiplier = (tn1.getType().equals(tn2.getType()))?1.0f:0.5f;
-//		float synMultiplier = (tn1.getName().equals(tn2.getName()))?1.0f:0.0f;
-//		float sim = (typeMultiplier * synMultiplier);
-//		
-//		return 1 - sim;
-//	}
-//	else return 0.0f;    
-	  
+  public float ren(Node<Feature> n1, Node<Feature> n2) {	  
 	  Feature f1 = n1.getNodeData();
 	  Feature f2 = n2.getNodeData();
 	  float f = 1.0f - (float) comparator.compareNGram((NGram) f1, (NGram) f2);
@@ -114,8 +82,6 @@ public class FeatureCostModel implements CostModel<Feature> {
 	  // TODO: what if completely different? should have 2 as distance? 1x delete + 1x insert? 
 	  // also need to change the denominator in the sim. formula then. 
 	  
-//	  if (f != 1 && f != 0 && f < 0.30) 
-//		  logger.debug(f1.toString() + "\t" + f2.toString() + "\t" + f);
 	  return f;
 	  
   }

@@ -46,8 +46,6 @@ public class NTreeApted extends AggregateFeature{
 	final Logger logger = LoggerFactory.getLogger(NTreeApted.class);
 
 		public AptedNodeCustom<Feature> aptedTree;
-//		private final SimpleFeature parentFeature;
-//		private final ArrayList<Feature> childFeatures;
 		
 		public final int n;
 		
@@ -86,19 +84,6 @@ public class NTreeApted extends AggregateFeature{
 			return size;
 		}
 		
-//		public ArrayList<Feature> getChildFeatures() {
-//			return childFeatures;
-//		}
-//		
-//		public SimpleFeature getParent() {return parentFeature;}
-//		public Feature getChild(int i) {return childFeatures.get(i);}
-//		
-//		public Feature get(int i) {
-//			if (i == 0)
-//				return getParent();
-//			else
-//				return childFeatures.get(i-1);
-//		}
 		
 		// HACK sorts implemented here, also no iteration/recursion into lower depths
 		public void sort(){
@@ -141,15 +126,6 @@ public class NTreeApted extends AggregateFeature{
 		public boolean equals(Object o) {
 			if (o instanceof NTreeApted)
 			{
-//				NTreeApted target = (NTreeApted) o;
-//				if (this.n != target.n) return false;
-//				
-//				if(!this.getParent().equals(target.getParent()))
-//				
-//				for (int i=0; i<this.childFeatures.size(); i++)
-//					if (!this.getChild(i).equals(target.getChild(i)))
-//						return false;
-//				return true;
 				
 				NTreeApted target = (NTreeApted) o;
 				return this.toString().equals(target.toString());
@@ -160,19 +136,7 @@ public class NTreeApted extends AggregateFeature{
 		
 		public String toString() {
 			return aptedTree.toString();
-//			String s = "";
-//			s += "[[" + parentFeature.toString() + "]]->";
-//			for (Feature f : childFeatures)
-//				s += "(" + f.toString() + ")--"; 
-//			return s.substring(0, s.length()-2);
 		}
-
-//		public int hashCode(){
-//			int code = 0;
-//			for (int i=0; i<n; i++)
-//				code += 2^(i+1) * getChild(i).hashCode(); 
-//			code += 2^(n+1) * getParent().hashCode();
-//			return code;
-//		}
+		
 		public int hashCode() { return this.toString().hashCode();}
 	}	

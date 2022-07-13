@@ -111,14 +111,4 @@ public class CompoundWords
 		return ( compounds );
 	}
 
-
-
-//  public static void main(String[] args)
-//  {
-//		CompoundWords	compoundwords = new CompoundWords();
-//		ArrayList<String> compounds	=	 compoundwords.getCompounds("a_compound-word");
-//		for(String c : compounds)
-//			System.out.println(c);
-//
-//  }
 }

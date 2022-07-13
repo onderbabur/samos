@@ -106,10 +106,8 @@ public class JSONParser {
 			if (MERGE_EGDE_NODES)
 				aptedTree = merge(aptedTree);
 			NTreeApted tree = new NTreeApted(aptedTree);
-//			System.out.println("\n" + tree);
 			if (SORT_NODES)
 				tree.sort();
-//			System.out.println(tree + "\n");
 			return tree;
 		}
 		else if (jsonObject.getString("ftype").equals("SimpleName")) {
@@ -170,6 +168,7 @@ public class JSONParser {
 	}
 	
 	public static void main(String[] args){
+		// examples below, not deleting for testing purposes later
 //		String s = "[NG] [AN] type:EClass,name:LocatedElement,instanceClassName:null,instanceTypeName:null,abstract:true,interface:false;[AN] type:contains;[AN] type:EAttribute,name:location,ordered:false,unique:false,lowerBound:1,upperBound:1,many:false,required:true,eType:String,changeable:true,volatile:false,transient:false,defaultValueLiteral:null,unsettable:false,derived:false,iD:false";		
 //		String s = "[NG] [SN] asd; [ST] edge; [SN] qwe";
 		//String s = "[NT] [AN] type:EClass,name:located_element,instanceClassName:null,instanceTypeName:null,abstract:true,interface:false;[ST] contains;[AN] type:EOperation,name:operation_black_hawk,ordered:true,unique:true,lowerBound:0,upperBound:1,many:false,required:false,eType:Boolean;[ST] contains;[AN] type:EAttribute,name:location,ordered:false,unique:false,lowerBound:1,upperBound:1,many:false,required:true,eType:String,changeable:true,volatile:false,transient:false,defaultValueLiteral:null,unsettable:false,derived:false,iD:false;[ST] contains;[AN] type:EAttribute,name:comment_before,ordered:true,unique:false,lowerBound:0,upperBound:-1,many:true,required:false,eType:String,changeable:true,volatile:false,transient:false,defaultValueLiteral:null,unsettable:false,derived:false,iD:false;[ST] contains;[AN] type:EAttribute,name:comment_after,ordered:true,unique:false,lowerBound:0,upperBound:-1,many:true,required:false,eType:String,changeable:true,volatile:false,transient:false,defaultValueLiteral:null,unsettable:false,derived:false,iD:false;[ST] contains;[AN] type:EAttribute,name:be_important,ordered:true,unique:true,lowerBound:0,upperBound:1,many:false,required:false,eType:Boolean,changeable:true,volatile:false,transient:false,defaultValueLiteral:null,unsettable:false,derived:true,iD:false;[ST] contains;[AN] type:EAttribute,name:key,ordered:true,unique:true,lowerBound:0,upperBound:1,many:false,required:false,eType:Integer,changeable:true,volatile:false,transient:false,defaultValueLiteral:null,unsettable:false,derived:false,iD:true;[ST] contains;[AN] type:EReference,name:movie_reference_lotr,ordered:true,unique:true,lowerBound:0,upperBound:5,many:true,required:false,eType:LordOfTheRings,changeable:true,volatile:false,transient:false,defaultValueLiteral:null,unsettable:false,derived:false,containment:false,container:false,resolveProxies:true,eOpposite:null;[ST] contains;[AN] type:EReference,name:book_reference_sw,ordered:true,unique:true,lowerBound:2,upperBound:2,many:true,required:true,eType:StarWars,changeable:true,volatile:false,transient:false,defaultValueLiteral:null,unsettable:false,derived:false,containment:false,container:false,resolveProxies:true,eOpposite:null;[ST] supertypeOf;[AN] type:EClass,name:lord_of_the_ring,instanceClassName:null,instanceTypeName:null,abstract:false,interface:false";

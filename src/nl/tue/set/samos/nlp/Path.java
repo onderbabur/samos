@@ -81,18 +81,9 @@ public class Path
 
 	public Path(IDictionary dict, ArrayList<ISynsetID> roots)
 	{
-//		System.out.println("... Path");
 		this.dict 			=	dict;
 		this.roots			=	roots;
-//LOCAL VERSION OD <ROOTS>
-		//System.out.println("... finding noun and verb <roots>");
-		//roots = new ArrayList<ISynsetID>();
-//get noun <roots>
-		//getRoots(POS.NOUN);
-//get verb <roots>
-		//getRoots(POS.VERB);
 
-//check compound words
 		compounds	=	new CompoundWords();
 		cp = Pattern.compile("[-_\\s]");
 	}
