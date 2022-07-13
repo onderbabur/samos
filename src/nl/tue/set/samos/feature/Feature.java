@@ -28,8 +28,6 @@ package nl.tue.set.samos.feature;
 
 import java.io.Serializable;
 
-// TODO named feature and typed feature abstract classes
-
 public abstract class Feature implements Serializable{
 
 	/**

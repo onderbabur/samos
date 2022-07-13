@@ -69,8 +69,7 @@ public class AttributedNode extends SimpleFeature implements TypedFeature, Named
 	
 	@Override public String getType() {return getAttribute("type");}
 	@Override public String getName() {return getAttribute("name");}
-	// TODO Assume always has name
-	//public boolean hasName() {return hasAttribute("name");}
+	// assume AN always has name
 	
 	public int size() {return keyValueMap.keySet().size();}
 	
@@ -90,7 +89,6 @@ public class AttributedNode extends SimpleFeature implements TypedFeature, Named
 	
 	@Override
 	public int hashCode(){
-		// TODO better hash code
 		Set<String> keys = keyValueMap.keySet();
 		int result = 0;
 		for (String key: keys) {

@@ -175,10 +175,10 @@ public class VSMBuilder {
 					{	
 						double temp = rawTfSparseMatrix.getAsDouble(modelNr,vocabularyIndex);
 						double comparisonResult = featureComparator.compare(rowFeature, columnFeature);
-						// FIXME TODO
+						// FIXME should never be smaller than 0, safety check here. 
 						if (comparisonResult < 0) comparisonResult = 0;
 							
-						// TODO uncomment and fix here
+						// FIXME uncomment and fix here
 						//		if ((!typeExactMatch1 || typeExactMatch2) && typeMatchTotal && rawTfMatrix[modelNr][vocabularyIndex] > 0 )
 						//			if (MATCH_LOG_FLAG) matchLog.println("NONTYPE MATCH:" + rowPair + " vs " + columnPair);
 
@@ -207,8 +207,6 @@ public class VSMBuilder {
 				int vocabularyIndex = 0;
 
 				logger.info(modelNr + " feature count " + allFeatures.get(modelNr).size());
-				
-				// TODO check the order of the list!!!
 										
 				for (Feature rowFeature: allFeatures.get(modelNr))
 				{	
@@ -216,7 +214,7 @@ public class VSMBuilder {
 					
 					double temp = rawTfSparseMatrix.getAsDouble(modelNr,vocabularyIndex);
 					
-					// TODO uncomment and fix here
+					// FIXME uncomment and fix here
 					//		if ((!typeExactMatch1 || typeExactMatch2) && typeMatchTotal && rawTfMatrix[modelNr][vocabularyIndex] > 0 )
 					//			if (MATCH_LOG_FLAG) matchLog.println("NONTYPE MATCH:" + rowPair + " vs " + columnPair);
 
@@ -246,7 +244,7 @@ public class VSMBuilder {
 //					for (Pair<String, String> p : maximalFeatureSet.get(j).pairs)
 //						weight = weight + weightsMap.get(p.x);
 //					weight = weight / maximalNgramVector.get(j).n;
-					// TODO fix
+					// not going for the experimental weighing for now 
 					
 					// DEFAULT WEIGHT
 					weight = 1.0;
@@ -255,7 +253,7 @@ public class VSMBuilder {
 						Feature rootNode = ((NTreeApted) f).aptedTree.getNodeData();
 						Feature simpleRoot = ((NGram) rootNode).get(0);
 						if (simpleRoot instanceof TypedFeature){
-							// normally an error if not in the map TODO fix
+							// normally an error if not in the map FIXME
 							try{
 								// weight based on the first element
 //								weight = weightsMap.get(((TypedFeature) firstGram).getType());
@@ -303,7 +301,7 @@ public class VSMBuilder {
 						Feature firstGram = ng.get(0);
 						
 						if (firstGram instanceof TypedFeature) {
-							// normally an error if not in the map TODO fix
+							// normally an error if not in the map FIXME
 							try{
 								// weight based on the first element
 //								weight = weightsMap.get(((TypedFeature) firstGram).getType());
@@ -379,8 +377,7 @@ public class VSMBuilder {
 					int sum = params._IDF == IDF.LOG?0:1;
 					if (numOfDocsWithTerm == 0)
 						logger.error("ERROR ZERO numOfDocs at " + j + " = " + numOfDocsWithTerm);
-					idfArray[j] = Math.log10(sum + (1.0 * totalDocs / numOfDocsWithTerm));
-					// idfArray[j] = Math.log10((1.0 * totalDocs / (sum + numOfDocsWithTerm))); TODO add more variations of idf 
+					idfArray[j] = Math.log10(sum + (1.0 * totalDocs / numOfDocsWithTerm)); // note idf can have more variations
 					if (idfArray[j] == Double.NaN)
 						logger.error("ERROR NaN idf at " + j + " = " + idfArray[j]);
 					if (idfArray[j] == Double.POSITIVE_INFINITY)
@@ -476,7 +473,6 @@ public class VSMBuilder {
 			weightsMap.put("EOperation", 0.2);
 			weightsMap.put("EParameter", 0.01);
 			
-			// TODO change below if necessary
 			weightsMap.put(Constants.HAS_SUPERTYPE, 0.2); 
 			weightsMap.put(Constants.THROWS, 0.1);
 		}

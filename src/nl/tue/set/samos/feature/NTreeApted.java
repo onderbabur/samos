@@ -166,7 +166,7 @@ public class NTreeApted extends AggregateFeature{
 //				s += "(" + f.toString() + ")--"; 
 //			return s.substring(0, s.length()-2);
 		}
-//		// TODO better hashCode
+
 //		public int hashCode(){
 //			int code = 0;
 //			for (int i=0; i<n; i++)

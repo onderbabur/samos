@@ -77,7 +77,6 @@ public class FeatureComparator {
 	final Logger logger = LoggerFactory.getLogger(FeatureComparator.class);
 	
 	// which comparison technique to use for n-trees?
-	// TODO do this configurable
 	public final int TREE_COMPARE = 
 //			0; // ordered tree edit distance
 			1; // hungarian (assignment problem for the leaves)
@@ -151,7 +150,7 @@ public class FeatureComparator {
 			ObjectInputStream s = new ObjectInputStream(fis);    
 			try {
 				dictionary = (LinkedHashSet<String>)s.readObject();
-				// adding dummy name TODO proper 
+				// adding dummy name 
 				dictionary.add("#ASD#QWE#ZXC#");
 //				int size = dictionary.size();
 //				for (int i=0; i<size; i++)
@@ -184,8 +183,6 @@ public class FeatureComparator {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 				s.close();
-				// turned off TODO proper 
-				// return;
 			} 								
 			s.close();
 		}		
@@ -310,7 +307,10 @@ public class FeatureComparator {
 			
 			for (int i=0; i<rowNgram.n; i++)
 				for (int j=0; j<columnNgram.n; j++)
-					typeMultipliers[i][j] = typeExactMatches[i][j]?1.0:(parameters._TYPE_MATCH == TYPE_MATCH.RELAXED_TYPE?REDUCED_TM_MULTIPLIER:0.0); // TODO too cryptic, refine
+					// if exact match then 1.0  anyways
+					// else if relaxed type setting a reduced value
+					// else plain zero
+					typeMultipliers[i][j] = typeExactMatches[i][j]?1.0:(parameters._TYPE_MATCH == TYPE_MATCH.RELAXED_TYPE?REDUCED_TM_MULTIPLIER:0.0); 
 			
 			
 			// COPY PASTA FROM ABOVE, for typeValues
@@ -330,7 +330,10 @@ public class FeatureComparator {
 			
 			for (int i=0; i<rowNgram.n; i++)
 				for (int j=0; j<columnNgram.n; j++)
-					typeValueMultipliers[i][j] = typeValueExactMatches[i][j]?1.0:(parameters._TYPE_MATCH == TYPE_MATCH.RELAXED_TYPE?REDUCED_TM_MULTIPLIER:0.0); // TODO too cryptic, refine
+					// if exact match then 1.0  anyways
+					// else if relaxed type setting a reduced value
+					// else plain zero
+					typeValueMultipliers[i][j] = typeValueExactMatches[i][j]?1.0:(parameters._TYPE_MATCH == TYPE_MATCH.RELAXED_TYPE?REDUCED_TM_MULTIPLIER:0.0); 
 		}
 
 		// CHECKING SYNONYMS
@@ -387,7 +390,7 @@ public class FeatureComparator {
 						else 
 							synMultipliers[i][j] = 0.0;
 						} catch(Exception ex){
-							// this happens when generating e.g. bigrams with types/supertypes retrieved from the URL -> hence not found in unigrams TODO fix
+							// this happens when generating e.g. bigrams with types/supertypes retrieved from the URL -> hence not found in unigrams FIXME
 							synMultipliers[i][j] = nlp.compareMultiword(f1.getName(), f2.getName(), Util.getSynonymTreshold(parameters._SYNONYM_TRESHOLD));
 						}
 						// NORMAL CHECK END						
@@ -408,8 +411,6 @@ public class FeatureComparator {
 						) 
 				{
 					double atrCompare = compareAttributes((AttributedNode)rowNgram.get(i), (AttributedNode)columnNgram.get(j));
-					if (atrCompare > 0.7 && atrCompare < 1.0)
-						; // TODO for debugging, remove
 					if (parameters._CTX_MATCH == CTX_MATCH.CTX_STRICT && parameters._TYPE_MATCH == TYPE_MATCH.STRICT_TYPE) // HACK added the second expression to check type match as well, problematic when dealing with unigrams  (always CTX_STRICT)
 						attributeMultipliers[i][j] = atrCompare==1.0?1.0:0.0;
 					else
@@ -426,7 +427,7 @@ public class FeatureComparator {
 			}
 		}
 		
-		// workaround: another pass on the synDoubles matrix just for the edges: TODO proper
+		// workaround: another pass on the synDoubles matrix just for the edges: TODO improve this
 		// assume edges cannot be at the corners of the matrix!
 		// another one, switch on off w.r.t structure
 		if (!(parameters._STRUCTURE == STRUCTURE.NTREE))
@@ -503,8 +504,7 @@ public class FeatureComparator {
 			distance = 1;
 			}
 		float result = 1 - distance;
-		// TODO this shouldn't happen
-		if (result < 0) result = 0;			
+		if (result < 0) result = 0;	// for safety, this does not happen	
 		if(parameters._CTX_MATCH == CTX_MATCH.CTX_STRICT)
 			return result==1?1:0;
 		else {

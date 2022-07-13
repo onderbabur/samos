@@ -345,10 +345,8 @@ public class HungarianAlgorithm {
    */
   protected void reduce() {
 	  
-	  // HACK 
 	  double[][] tempCostMatrix = new double[costMatrix.length][costMatrix[0].length];
 	  arrayCopy(costMatrix, tempCostMatrix);
-	  // END HACK
 	  
     for (int w = 0; w < dim; w++) {
       double min = Double.POSITIVE_INFINITY;

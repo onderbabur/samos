@@ -137,7 +137,7 @@ public class Util {
 		case "EClass": return 4;
 		case "EDataType": return 3;
 		case "EEnumLiteral": return 4;
-		case "EEnum": return 5; // TODO ???
+		case "EEnum": return 5; 
 		case "EAttribute": return 7;
 		case "EReference": return 10;
 		case "EOperation": return 6;

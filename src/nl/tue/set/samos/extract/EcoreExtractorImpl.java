@@ -117,7 +117,7 @@ public class EcoreExtractorImpl extends IExtractor {
 			er.printStackTrace();
 		}
 		
-		return null; // TODO don't return null
+		return null;
 	}
 	
 	public void getAllEObjects(EObject object, List<EObject> objects){		
@@ -148,7 +148,7 @@ public class EcoreExtractorImpl extends IExtractor {
 			if (!PREPROCESS_TOKENIZE) {
 				expandedFeatures.addAll(generateFeatureAux((EObject)object, _UNIT, _STRUCTURE));
 			}
-			else { // need to expand, again works only for unigrams TODO
+			else { // need to expand, again works only for unigrams. Not planned for n>2-grams at the moment. 
 				expandedFeatures.addAll(generateFeaturesExpand((EObject)object, _UNIT, _STRUCTURE));
 			}
 
@@ -174,14 +174,14 @@ public class EcoreExtractorImpl extends IExtractor {
 	}
 	
 			
-	// expansion only for unigrams TODO 
+	// expansion only for unigrams, not planned for n>2-grams at the moment. 
 	public ArrayList<String> generateFeatures(EObject object, UNIT _UNIT, STRUCTURE _STRUCTURE){
 		
 		ArrayList<String> features = new ArrayList<String>();
 		if (!PREPROCESS_TOKENIZE) {
 			features.addAll(generateFeatureAux(object, _UNIT, _STRUCTURE));
 		}
-		else { // need to expand, again works only for unigrams TODO
+		else { // need to expand, again works only for unigrams, not planned for n>2-grams at the moment. 
 			features.addAll(generateFeaturesExpand(object, _UNIT, _STRUCTURE));
 		}
 		return features;
@@ -196,7 +196,7 @@ public class EcoreExtractorImpl extends IExtractor {
 		}
 		else if (_STRUCTURE == STRUCTURE.BIGRAM) {	
 				String result = generateFeatureFromChildren(object, _UNIT, Util.isJSON(_STRUCTURE));
-				// HACK TODO improve
+				// workaround at the moment, generateFeaturesFromChildren should not return null. 
 				if (result != null) {
 					String[] splits = result.split("\n");
 					results.addAll(Arrays.asList(splits));
@@ -228,7 +228,7 @@ public class EcoreExtractorImpl extends IExtractor {
 				}
 				executor.shutdownNow();
 			}
-			// HACK TODO proper
+
 			if (result != null) {
 				String[] splits = result.split("\n");
 				results.addAll(Arrays.asList(splits));
@@ -243,8 +243,8 @@ public class EcoreExtractorImpl extends IExtractor {
 		if (object instanceof EClass){
 			if (((EClass)object).getESuperTypes().size() > 0) {			
 				for (EClass superClass: ((EClass)object).getESuperTypes()){			
-					// need to check for cycles, also checking max parent size TODO
-					// this is also wrong because just checking parent NODES, not edges!!! TODO			
+					// need to check for cycles, also checking max parent size FIXME
+					// this is also wrong because just checking parent NODES, not edges!!! 		
 //					boolean hasSuperClass = false;
 					if (superClass != null) {
 						// HACK
@@ -360,7 +360,7 @@ public class EcoreExtractorImpl extends IExtractor {
 	}
 
 	public ArrayList<String> generateFeaturesExpand(EObject object, UNIT _UNIT, STRUCTURE _STRUCTURE){		
-		// currently always N-gram, TODO 
+		// currently always N-gram, intended for n-grams at the moment (e.g. not for ntrees)
 		ArrayList<String> simpleFeatures = generateSimpleFeaturesExpand(object, _UNIT);
 		for (int i=0; i<simpleFeatures.size(); i++)
 			simpleFeatures.set(i, Constants.NG + simpleFeatures.get(i));
@@ -512,7 +512,7 @@ public class EcoreExtractorImpl extends IExtractor {
 		return results;
 	}
 	
-	// TODO fix, e.g. default instanceValueName == null should not be printed
+	// FIXME e.g. default instanceValueName == null should not be printed
 	private boolean isAttributeNonDefault(String attributeName, Object value) {
 		if (attributeName.equals("name") || attributeName.equals("type") || attributeName.equals("eType")) 
 			return true;
@@ -629,7 +629,6 @@ public class EcoreExtractorImpl extends IExtractor {
 			append("changeable", eStructuralFeature.isChangeable(), feature, obj, isJSON);
 			append("volatile", eStructuralFeature.isVolatile(), feature, obj, isJSON);
 			append("transient", eStructuralFeature.isTransient(), feature, obj, isJSON);
-			// TODO for all the strings handleEmptyString
 			append("defaultValueLiteral", nlp.cleanse(nlp.handleEmptyString(eStructuralFeature.getDefaultValueLiteral())), feature, obj, isJSON);
 //			feature += "defaultValue" + Constants.ATTRIB_MAP_SEP + eStructuralFeature.getDefaultValue() + Constants.ATTRIB_SEP;
 			append("unsettable", eStructuralFeature.isUnsettable(), feature, obj, isJSON);
@@ -647,7 +646,8 @@ public class EcoreExtractorImpl extends IExtractor {
 			append("iD", eAttribute.isID(), feature, obj, isJSON);
 		}
 		
-		// TODO eKeys
+		// eKeys - ignoring for now
+		
 		if (object instanceof EReference) {
 			EReference eReference = ((EReference)object);
 			append("containment", eReference.isContainment(), feature, obj, isJSON);

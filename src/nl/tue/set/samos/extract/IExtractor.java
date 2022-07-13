@@ -85,8 +85,6 @@ public abstract class IExtractor {
 		}
 	}
 	
-	// TODO
-	//public Filter filter; 
 	
 	// to be implemented
 	public abstract List<String> extractFeatures(Object CURRENT, UNIT _UNIT, STRUCTURE _STRUCTURE);

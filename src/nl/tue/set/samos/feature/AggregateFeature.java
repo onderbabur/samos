@@ -33,5 +33,4 @@ public abstract class AggregateFeature extends Feature{
 	 */
 	private static final long serialVersionUID = -3454353992923872974L;
 
-	// TODO add method getAllFeatures()
 }

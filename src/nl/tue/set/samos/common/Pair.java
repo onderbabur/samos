@@ -31,7 +31,7 @@ public class Pair<X, Y> implements Serializable {
 		private static final long serialVersionUID = -6084234587273566816L;
 		public final X x; 
 		public final Y y; 
-		public Pair(){x = null; y=null;} // TODO workaround
+		public Pair(){x = null; y=null;} 
 		public Pair(X x, Y y) { 
 			this.x = x; 
 			this.y = y; 

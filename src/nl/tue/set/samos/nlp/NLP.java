@@ -92,7 +92,7 @@ public class NLP {
 	
 	private final String tokenSeparators = "$_- ";
 	
-	// TODO ADDED 'has' here!!!
+	// added the word 'has' here, which was not originally in the set
 	private final List<String> englishStopWords = Arrays.asList(
 		       "a", "an", "and", "are", "as" , "at", "be", "but", "by", // as disabled for statecharts
 		       "for", "if", "in", "into", "is", "it",
@@ -501,7 +501,7 @@ public class NLP {
 		// if same stems, consider synonym
 		if (stem(lowerCaseWord1).equals(stem(lowerCaseWord2))) return 0.9; // WAS 1.0
 		
-		// TODO check lemmas, if not PREPROCESS_LEMMATIZE
+		// assuming lemmatized before here
 //		if (lemmatizer.getLemma(lowerCaseWord1).equals(lemmatizer.getLemma(lowerCaseWord1))) return 0.9;
 		
 		// levenshtein  
@@ -795,7 +795,7 @@ public class NLP {
 	
 	public String lemmatizeIfFlagSet(String base, boolean preToken, boolean preLemma) {
 		String result = lemmatizeIfFlagSet_aux(base, preToken, preLemma);
-		if (result == null || result.equals("")) // TODO deal with this properly
+		if (result == null || result.equals("")) 
 			result = "-";
 		return result;
 	}
@@ -809,7 +809,7 @@ public class NLP {
 		}
 		else {
 			if (preLemma) {
-				String[] expandedTokens = tokeniseIntt(base); // TODO should we filter here??
+				String[] expandedTokens = tokeniseIntt(base); 
 				for (int i=0; i<expandedTokens.length; i++) {
 	
 						expandedTokens[i] = Lemmatizer.getInstance().getLemma(expandedTokens[i].toLowerCase()).trim();

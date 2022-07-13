@@ -101,11 +101,7 @@ public class SAMOSRunner {
 			return;
 		}
 		
-		SAMOSRunner samos = new SAMOSRunner(args);
-		
-		// TODO check redundant configurations and do not run SAMOS if so. 
-//		if (samos.isRedundantConfiguration(new Parameters(_UNIT, _STRUCTURE)))
-//				return;
+		SAMOSRunner samos = new SAMOSRunner(args);		
 		
 		try {
 			if (args[0].substring(2).equalsIgnoreCase(GOAL.CLUSTER.toString())) {
