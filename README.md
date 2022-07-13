@@ -33,8 +33,18 @@ Potentially mode up-to-date public online documentation, including installation 
 2. Download [Eclipse Modeling Tools](https://www.eclipse.org/downloads/packages/release/2021-03/r/eclipse-modeling-tools) for your operating system (tested with Windows, MacOS, Linux for the Eclipse package version 2021-03).
 3. Run Eclipse and through Eclipse marketplace install the Eclipse plugin [m2e](https://github.com/eclipse-m2e/m2e-core/blob/master/README.md#-installation) for Maven integration. 
 4. Install [R](https://cran.r-project.org/mirrors.html) for your operating system (tested with versions 3.6.1 and 4+). 
-5. Install [rJava](https://rforge.net/JRI/) by going to R and running the command `install.packages("rJava")`. Make sure to note down the values for R_HOME and the JRI library path as explained in the rJava website, to be later added in Eclipse run configurations. 
+5. Install [rJava](https://rforge.net/JRI/) by going to R and running the command `install.packages("rJava")`. Make sure to note down the values for R_HOME and the JRI library path as explained in the rJava website, to be later added in Eclipse run configurations. See below for the typical values for MacOS and Linux. 
 6. Install the custom R package "vegan" from the archive file under the path lib\vegan_2.4-3.tar.gz, using the R command `install.packages(FULL_PATH_TO_ARCHIVE, repos = NULL)`. The rest of the required R packages are installed when you first run SAMOS analyses. 
+
+MACOS paths for rJava:
+
+	R_HOME = /Library/Frameworks/R.framework/Resources/Library/Frameworks/R.framework/Resources
+	JRI library path = /Library/Frameworks/R.framework/Resources/library/rJava/jri/
+
+Linux (Lubuntu as in the VM) paths for rJava:
+
+	R_HOME = /usr/lib/R/
+	JRI library path = /usr/lib/R/site-library/rJava/
 
 #### Importing and building SAMOS
 1. Download project zip file from the GitHub address of [SAMOS](https://github.com/onderbabur/samos/archive/refs/heads/main.zip).
