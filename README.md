@@ -14,7 +14,7 @@ Potentially mode up-to-date public online documentation, including installation 
 
 # Running SAMOS from the virtual image 
 1. Download [Virtual Box](https://www.virtualbox.org/wiki/Downloads) for your operating system.
-2. Download [the Lubuntu image archive we provide](https://drive.google.com/file/d/1vNis0cQ2ZQ4uN9MuuO8ZUmLCE3BuaPr6/view?usp=sharing), which contains all the required software and configuration to run SAMOS. 
+2. Download [the Lubuntu image archive we provide](https://drive.google.com/file/d/1OSYGk-eEga35NbdsPv6R8JyiXABkVD2p/view?usp=sharing), which contains all the required software and configuration to run SAMOS. 
 3. Unrar the image file Lubuntu 21.04 (64bit).vdi into a folder. 
 4. Go to Virtual Box, and using Tools click on "New" to add a new virtual machine. 
 5. Write a name you'd like. In the hard disk options, choose "Use an existing virtual hard disk file". 
