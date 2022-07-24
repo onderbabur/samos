@@ -1,4 +1,4 @@
-Potentially mode up-to-date public online documentation, including installation guide and a short demonstration, for SAMOS can be found in the [SAMOS GitHub.io page](https://onderbabur.github.io/samos/).
+Potentially more up-to-date public online documentation, including installation guide and a short demonstration, for SAMOS can be found in the [SAMOS GitHub.io page](https://onderbabur.github.io/samos/).
 
 # Introduction
 **SAMOS** (Statistical Analysis of Models) is a framework for model analytics and management. It is capable of processing large numbers of models for different scenarios, notably domain clustering and clone detection. The underlying principles are inspired from the domains information retrieval, data science and machine learning. The main components of a typical SAMOS workflow consist of (a) model fragmentation in terms n-grams, (b) feature comparison using algorithms and natural language processing, (c) vector space model computation, (d) distance measurement and clustering.   
