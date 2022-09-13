@@ -14,7 +14,7 @@ Potentially more up-to-date public online documentation, including installation 
 
 # Running SAMOS from the virtual image 
 1. Download [Virtual Box](https://www.virtualbox.org/wiki/Downloads) for your operating system.
-2. Download [the Lubuntu image archive we provide](https://drive.google.com/file/d/1OSYGk-eEga35NbdsPv6R8JyiXABkVD2p/view?usp=sharing), which contains all the required software and configuration to run SAMOS. 
+2. Download [the Lubuntu image archive we provide on Zenodo](https://zenodo.org/record/7074428), which contains all the required software and configuration to run SAMOS. 
 3. Unrar the image file Lubuntu 21.04 (64bit).vdi into a folder. 
 4. Go to Virtual Box, and using Tools click on "New" to add a new virtual machine. 
 5. Write a name you'd like. In the hard disk options, choose "Use an existing virtual hard disk file". 
@@ -73,7 +73,7 @@ To cite SAMOS, please use the following bibtex entry:
 
 ````
 @article{babur2022samos,
-title = "{SAMOS}: A Framework for Model Analytics and Management",
+title = "{SAMOS} - A Framework for Model Analytics and Management",
 journal = "Science of Computer Programming",
 year = "2022",
 author = "{\"O}nder Babur and Loek Cleophas and Mark {van den Brand}"
