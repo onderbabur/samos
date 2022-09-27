@@ -74,8 +74,11 @@ To cite SAMOS, please use the following bibtex entry:
 ````
 @article{babur2022samos,
 title = "{SAMOS} - A Framework for Model Analytics and Management",
-journal = "Science of Computer Programming",
-year = "2022",
+journal = {Science of Computer Programming},
+pages = {102877},
+year = {2022},
+issn = {0167-6423},
+doi = {https://doi.org/10.1016/j.scico.2022.102877},
 author = "{\"O}nder Babur and Loek Cleophas and Mark {van den Brand}"
 }
 ````
